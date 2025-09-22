@@ -28,16 +28,23 @@ const Assert = module.exports;
 Assert.user = helpers.try(async (req, res, next) => {
 	const uid = req.params.uid || res.locals.uid;
 
-	if (
-		uid !== -2 && // exposeUid middleware was in chain (means route is local user only) and resolved to fediverse user
-		(((utils.isNumber(uid) || activitypub.helpers.isUri(uid)) && await user.exists(uid)) ||
-		(uid.indexOf('@') !== -1 && await user.existsBySlug(uid)))
-	) {
+	if (uid === -2) {
+		return controllerHelpers.formatApiResponse(404, res, new Error('[[error:no-user]]'));
+	}
+
+	const isIdOrUri = utils.isNumber(uid) || activitypub.helpers.isUri(uid);
+	const existsByIdOrUri = isIdOrUri ? await user.exists(uid) : false;
+
+	const looksLikeSlug = (typeof uid === 'string') && uid.includes('@');
+	const existsBySlug = looksLikeSlug ? await user.existsBySlug(uid) : false;
+
+	if (existsByIdOrUri || existsBySlug) {
 		return next();
 	}
 
-	controllerHelpers.formatApiResponse(404, res, new Error('[[error:no-user]]'));
+	return controllerHelpers.formatApiResponse(404, res, new Error('[[error:no-user]]'));
 });
+
 
 Assert.group = helpers.try(async (req, res, next) => {
 	const name = await groups.getGroupNameByGroupSlug(req.params.slug);
