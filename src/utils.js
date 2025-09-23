@@ -83,4 +83,17 @@ utils.getFontawesomeVersion = function () {
 	return packageJson.version;
 };
 
+/**
+ * Wraps a promise with a timeout
+ * @param {Promise} promise - The promise to wrap
+ * @param {number} ms - Timeout in milliseconds
+ * @param {string} timeoutMessage - Error message on timeout
+ * @returns {Promise}
+ */
+utils.withTimeout = function (promise, ms, timeoutMessage) {
+	const timeout = new Promise((_, reject) => {
+		setTimeout(() => reject(new Error(timeoutMessage)), ms);
+	});
+	return Promise.race([promise, timeout]);
+};
 module.exports = utils;
