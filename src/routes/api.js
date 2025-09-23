@@ -7,8 +7,15 @@ const helpers = require('./helpers');
 
 module.exports = function (app, middleware, controllers) {
 	const middlewares = [middleware.autoLocale, middleware.authenticateRequest];
+	const { canViewUserFavorites } = require('src/middleware/permissions');
+
 	const router = express.Router();
 	app.use('/api', router);
+
+	router.post('/favorites', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.favorites.create));
+	router.delete('/favorites/:targetId', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.favorites.destroy));
+	router.get('/favorites/me', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.favorites.listMine));
+	router.get('/favorites/:uid', [...middlewares, middleware.ensureLoggedIn, canViewUserFavorites], helpers.tryRoute(controllers.favorites.listByUser));
 
 	router.get('/config', [...middlewares, middleware.applyCSRF], helpers.tryRoute(controllers.api.getConfig));
 
