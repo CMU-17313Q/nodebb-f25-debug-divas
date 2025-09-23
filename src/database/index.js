@@ -13,6 +13,8 @@ if (!databaseName) {
 const primaryDB = require(`./${databaseName}`);
 const utils = require('../utils');
 
+
+
 primaryDB.parseIntFields = function (data, intFields, requestedFields) {
 	intFields.forEach((field) => {
 		if (!requestedFields || !requestedFields.length || requestedFields.includes(field)) {
