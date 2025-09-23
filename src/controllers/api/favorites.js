@@ -13,7 +13,7 @@ function getAuthUid(res) {
 }
 
 function parseAnnouncementId(req) {
-    
+
 	const fromBody = Number(req.body?.announcementId ?? req.body?.targetId);
 	const fromParam = Number(req.params?.announcementId ?? req.params?.targetId);
 	const id = Number.isFinite(fromBody) ? fromBody : fromParam;
@@ -84,7 +84,7 @@ module.exports = {
 			// error if nothing found
 			await Favorites.remove(uid, announcementId);
 			return res.status(204).end();
-            
+
 		} catch (err) {
 			return next(err);
 		}
