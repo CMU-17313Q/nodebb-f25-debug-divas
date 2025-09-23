@@ -74,7 +74,7 @@ utils.getFontawesomeStyles = function () {
 	if (!Array.isArray(styles)) {
 		styles = [styles];
 	}
-	return styles;
+	return styles;  
 };
 
 utils.getFontawesomeVersion = function () {
@@ -82,5 +82,4 @@ utils.getFontawesomeVersion = function () {
 	const packageJson = require(path.join(fontawesomePath, 'package.json'));
 	return packageJson.version;
 };
-
 module.exports = utils;
