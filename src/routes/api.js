@@ -12,6 +12,7 @@ module.exports = function (app, middleware, controllers) {
 	const router = express.Router();
 	app.use('/api', router);
 
+	// Routes for favorites
 	router.post('/favorites', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.favorites.create));
 	router.delete('/favorites/:targetId', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.favorites.destroy));
 	router.get('/favorites/me', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.favorites.listMine));
