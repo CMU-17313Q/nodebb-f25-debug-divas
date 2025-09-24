@@ -526,9 +526,9 @@ describe('API', async () => {
 					// HACK: allow HTTP 418 I am a teapot, for now   👇
 					const { responses } = context[method];
 					// assert(
-					// 	responses.hasOwnProperty('418') ||
-					// 	Object.keys(responses).includes(String(result.response.statusCode)),
-					// 	`${method.toUpperCase()} ${path} sent back unexpected HTTP status code: ${result.response.statusCode}`
+					// responses.hasOwnProperty('418') ||
+					// Object.keys(responses).includes(String(result.response.statusCode)),
+					// ${method.toUpperCase()} ${path} sent back unexpected HTTP status code: ${result.response.statusCode}`
 					// );
 				});
 
