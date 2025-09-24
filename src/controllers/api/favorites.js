@@ -2,8 +2,6 @@
 
 //only a user can see their own favorites, if needed i can add admin override later
 
-// Fix this where is this module?
-// What is it doing ?
 const Favorites = require('../../api/favorites');
 
 // helper that we will use to get auntheticated user ID
