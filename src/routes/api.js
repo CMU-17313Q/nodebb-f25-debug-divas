@@ -7,7 +7,7 @@ const helpers = require('./helpers');
 
 module.exports = function (app, middleware, controllers) {
 	const middlewares = [middleware.autoLocale, middleware.authenticateRequest];
-	const { canViewUserFavorites } = require('src/middleware/permissions');
+	const { canViewUserFavorites } = require('../middleware/permissions');
 
 	const router = express.Router();
 	app.use('/api', router);
