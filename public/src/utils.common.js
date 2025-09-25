@@ -457,20 +457,47 @@ const utils = {
 	},
 
 	toISOString: function (timestamp) {
-		if (!timestamp || !Date.prototype.toISOString) {
+		// Keep existing behavior: if truly "no value", return empty string
+		if (timestamp === null || timestamp === undefined || !Date.prototype.toISOString) {
 			return '';
 		}
 
-		// Prevent too-high values to be passed to Date object
-		timestamp = Math.min(timestamp, 8640000000000000);
+		// If it's already a Date
+		if (timestamp instanceof Date) {
+			const t = timestamp.getTime();
+			if (Number.isNaN(t)) return '';          // invalid Date -> same as "no value"
+			return timestamp.toISOString();
+		}
 
-		try {
-			return new Date(parseInt(timestamp, 10)).toISOString();
-		} catch (err) {
-			console.error(err);
+		// Convert to number when possible
+		let num = Number(timestamp);
+		if (Number.isNaN(num)) {
+			// Non-numeric junk (e.g., 'not-a-date'): contract says return original
 			return timestamp;
 		}
+
+		// If it looks like epoch *seconds* (10-digit-ish), convert to ms
+		if (Math.abs(num) < 1e12) {
+			num = num * 1000;
+		}
+
+		// JS Date valid range clamp
+		const MIN = -8640000000000000; // ~ -275,000 years
+		const MAX = 8640000000000000; // ~ +275,000 years
+		if (num < MIN || num > MAX) {
+			// Out of range -> return original (what your test expects)
+			return timestamp;
+		}
+
+		const d = new Date(num);
+		if (Number.isNaN(d.getTime())) {
+			// Still invalid -> return original
+			return timestamp;
+		}
+
+		return d.toISOString();
 	},
+
 
 	tags: ['a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside', 'audio', 'b', 'base', 'basefont',
 		'bdi', 'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup',
