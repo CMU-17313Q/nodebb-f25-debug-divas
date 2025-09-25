@@ -15,6 +15,22 @@
 	<a component="topic/unpin" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if !pinned }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-thumb-tack fa-rotate-90 text-secondary"></i> [[topic:thread-tools.unpin]]</a>
 </li>
 
+<li {{{ if !favorited }}}hidden{{{ end }}}>
+    <a component="topic/unfavorite" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2">
+        <i class="fa fa-fw fa-star text-secondary"></i> [[topic:unfavorite]]
+    </a>
+</li>
+<!-- add to favorites -->
+
+
+<li {{{ if favorited }}}hidden{{{ end }}}>
+    <a component="topic/favorite" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2">
+        <i class="fa fa-fw fa-star-o text-secondary"></i> [[topic:favorite]]
+    </a>
+</li>
+<!-- remove from favorites -->
+
+
 <li>
 	<a component="topic/move" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem"><i class="fa fa-fw fa-arrows text-secondary"></i> [[topic:thread-tools.move]]</a>
 </li>
