@@ -1,0 +1,39 @@
+delete:
+  tags:
+    - favorites
+  summary: Remove a favorite announcement
+  description: Remove an announcement from the current user's favorites
+  security:
+    - BearerAuth: []
+    - cookieAuth: []
+  parameters:
+    - name: announcementId
+      in: path
+      required: true
+      description: The ID of the announcement to unfavorite
+      schema:
+        type: integer
+        example: 123
+  responses:
+    '204':
+      description: Favorite removed successfully
+    '400':
+      description: Missing announcementId
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Missing announcementId/targetId"
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unauthorized"

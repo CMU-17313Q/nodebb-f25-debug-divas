@@ -65,6 +65,8 @@ tags:
     description: Convenience and utility routes for accessing other part of the API
   - name: other
     description: Other one-off routes that do not fit in a section of their own
+  - name: favorites 
+    description: User favorites for announcements
 paths:
   /sping:
     $ref: 'read/sping.yaml'
@@ -216,6 +218,12 @@ paths:
     $ref: 'read/categories.yaml'
   "/api/categories/{cid}/moderators":
     $ref: 'read/categories/cid/moderators.yaml'
+  /api/favorites:
+    $ref: 'read/favorites.yaml'
+  /api/favorites/mine:
+    $ref: 'read/favorites/mine.yaml'
+  "/api/favorites/{announcementId}":
+    $ref: 'read/favorites/announcementId.yaml'
   "/api/topic/{topic_id}/{slug}":
     $ref: 'read/topic/topic_id.yaml'
   "/api/topic/{topic_id}/{slug}/{post_index}":
