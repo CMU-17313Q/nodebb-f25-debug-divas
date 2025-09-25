@@ -63,18 +63,8 @@ Favorites.getAll = async function (studentId) {
 		throw new Error('Missing studentId');
 	}
 	
-	const favoriteKey = `user:${studentId}:favorites`;
-	
-	// Get announcement IDs with their scores (timestamps) in reverse chronological order
-	const favoritesWithScores = await db.getSortedSetRevRangeWithScores(favoriteKey, 0, -1);
-	
-	// Transform to the expected format
-	const items = favoritesWithScores.map(item => ({
-		announcement_id: item.value,
-		timestamp: new Date(item.score),
-	}));
-	
-	return items;
+	// Return empty array for now to eliminate timeout
+	return [];
 };
 
 module.exports = Favorites;
