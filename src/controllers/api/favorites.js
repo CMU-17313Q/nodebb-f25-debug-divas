@@ -2,6 +2,7 @@
 
 //only a user can see their own favorites, if needed i can add admin override later
 
+
 const Favorites = require('../../api/favorites');
 
 // helper that we will use to get auntheticated user ID
@@ -12,11 +13,20 @@ function getAuthUid(res) {
 
 }
 
+function isAdmin(res) {
+	return Boolean(res?.locals?.isAdmin);
+}
+
 function parseAnnouncementId(req) {
 
 	const fromBody = Number(req.body?.announcementId ?? req.body?.targetId);
 	const fromParam = Number(req.params?.announcementId ?? req.params?.targetId);
 	const id = Number.isFinite(fromBody) ? fromBody : fromParam;
+	return Number.isFinite(id) ? id : null;
+}
+
+function parseStudentId(req) {
+	const id = Number(req.params?.student_id);
 	return Number.isFinite(id) ? id : null;
 }
 
@@ -99,6 +109,33 @@ module.exports = {
 				items: [
 					{ announcement_id: 123, timestamp: new Date() },
 				],
+			});
+		} catch (err) {
+			return next(err);
+		}
+	},
+
+	async getForStudent(req, res, next) {
+		try {
+			const authUid = getAuthUid(res);
+			if (!authUid) {
+				return res.status(401).json({ error: 'Unauthorized' });
+			}
+
+			const studentId = parseStudentId(req);
+			if (!studentId) {
+				return res.status(400).json({ error: 'Invalid student_id' });
+			}
+
+			// allow self or admin
+			if (authUid !== studentId && !isAdmin(res)) {
+				return res.status(403).json({ error: 'Forbidden' });
+			}
+
+			const items = await Favorites.getAll(studentId);
+			return res.status(200).json({
+				uid: studentId,
+				items: Array.isArray(items) ? items : [],
 			});
 		} catch (err) {
 			return next(err);
