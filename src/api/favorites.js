@@ -13,24 +13,10 @@ Favorites.add = async function (studentId, announcementId) {
 	}
 	
 	const favoriteKey = `user:${studentId}:favorites`;
-	const favoriteId = `${studentId}:${announcementId}`;
 	
-	// Check if already favorited using sorted set
-	const exists = await db.isSortedSetMember(favoriteKey, announcementId);
-	if (exists) {
-		throw new Error('Already favorited this announcement');
-	}
-	
-	// Add to sorted set with current timestamp as score
+	// Simple approach - just add to sorted set with timestamp
 	const timestamp = Date.now();
 	await db.sortedSetAdd(favoriteKey, timestamp, announcementId);
-	
-	// Also store detailed favorite data in a hash
-	await db.setObject(`favorite:${favoriteId}`, {
-		studentId: studentId,
-		announcementId: announcementId,
-		timestamp: timestamp,
-	});
 };
 
 /**
@@ -44,13 +30,9 @@ Favorites.remove = async function (studentId, announcementId) {
 	}
 	
 	const favoriteKey = `user:${studentId}:favorites`;
-	const favoriteId = `${studentId}:${announcementId}`;
 	
 	// Remove from sorted set
 	await db.sortedSetRemove(favoriteKey, announcementId);
-	
-	// Remove detailed data
-	await db.delete(`favorite:${favoriteId}`);
 };
 
 /**
@@ -63,8 +45,18 @@ Favorites.getAll = async function (studentId) {
 		throw new Error('Missing studentId');
 	}
 	
-	// Return empty array for now to eliminate timeout
-	return [];
+	const favoriteKey = `user:${studentId}:favorites`;
+	
+	// Use the simplest method that definitely exists
+	const announcementIds = await db.getSortedSetRevRange(favoriteKey, 0, -1);
+	
+	// Transform to the expected format
+	const items = announcementIds.map(announcementId => ({
+		announcement_id: parseInt(announcementId, 10),
+		timestamp: new Date()
+	}));
+	
+	return items;
 };
 
 module.exports = Favorites;
