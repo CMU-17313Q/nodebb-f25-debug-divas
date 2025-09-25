@@ -4,6 +4,7 @@ const express = require('express');
 
 const uploadsController = require('../controllers/uploads');
 const helpers = require('./helpers');
+const favoritesController = require('../controllers/api/favorites');
 
 module.exports = function (app, middleware, controllers) {
 	const middlewares = [middleware.autoLocale, middleware.authenticateRequest];
@@ -22,6 +23,11 @@ module.exports = function (app, middleware, controllers) {
 	router.get('/unread/total', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(controllers.unread.unreadTotal));
 	router.get('/topic/teaser/:topic_id', [...middlewares], helpers.tryRoute(controllers.topics.teaser));
 	router.get('/topic/pagination/:topic_id', [...middlewares], helpers.tryRoute(controllers.topics.pagination));
+
+	// favorites routes
+	router.post('/favorites', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.create));
+	router.delete('/favorites/:announcementId', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.destroy));
+	router.get('/favorites/mine', [...middlewares], helpers.tryRoute(favoritesController.listMine));
 
 	const multipart = require('connect-multiparty');
 	const multipartMiddleware = multipart();
@@ -42,12 +48,4 @@ module.exports = function (app, middleware, controllers) {
 		middleware.canViewUsers,
 		middleware.checkAccountPermissions,
 	], helpers.tryRoute(controllers.accounts.edit.uploadPicture));
-
-	router.get(
-		'/favorites/:student_id',
-		[...middlewares, middleware.ensureLoggedIn],
-		helpers.tryRoute(controllers.favorites.getForStudent)
-	);
-
 };
-
