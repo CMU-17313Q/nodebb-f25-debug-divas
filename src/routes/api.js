@@ -27,7 +27,7 @@ module.exports = function (app, middleware, controllers) {
 	// favorites routes
 	router.post('/favorites', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.create));
 	router.delete('/favorites/:announcementId', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.destroy));
-	router.get('/favorites/mine', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.listMine));
+	router.get('/favorites/mine', [...middlewares], helpers.tryRoute(favoritesController.listMine));
 
 	const multipart = require('connect-multiparty');
 	const multipartMiddleware = multipart();
