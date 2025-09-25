@@ -1,0 +1,83 @@
+post:
+  tags:
+    - favorites
+  summary: Add a favorite announcement
+  description: Add an announcement to the current user's favorites
+  security:
+    - BearerAuth: []
+    - cookieAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - announcementId
+          properties:
+            announcementId:
+              type: integer
+              description: The ID of the announcement to favorite
+              example: 123
+            targetId:
+              type: integer
+              description: Alternative field name for announcementId
+              example: 123
+  responses:
+    '201':
+      description: Favorite added successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              uid:
+                type: integer
+                description: User ID
+              targetId:
+                type: integer
+                description: Announcement ID that was favorited
+              favorited:
+                type: boolean
+                example: true
+              alreadyFavorited:
+                type: boolean
+                description: True if already favorited
+                example: false
+    '200':
+      description: Already favorited (no change)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              uid:
+                type: integer
+              targetId:
+                type: integer
+              favorited:
+                type: boolean
+                example: true
+              alreadyFavorited:
+                type: boolean
+                example: true
+    '400':
+      description: Missing announcementId
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Missing announcementId/targetId"
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unauthorized"
