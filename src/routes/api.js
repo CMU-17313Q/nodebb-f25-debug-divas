@@ -12,10 +12,10 @@ module.exports = function (app, middleware, controllers) {
 	const router = express.Router();
 	app.use('/api', router);
 
-	// Routes for favorites
-	router.post('/', favoritesController.create);
-	router.delete('/:announcementId', favoritesController.destroy);
-	router.get('/mine',favoritesController.listMine);
+	// // Routes for favorites
+	router.post('/favorites', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.create));
+	router.delete('/favorites/:announcementId', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.destroy));
+	router.get('/favorites/mine', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.listMine));
 
 	router.get('/config', [...middlewares, middleware.applyCSRF], helpers.tryRoute(controllers.api.getConfig));
 

@@ -27,8 +27,7 @@ const activitypub = require('../src/activitypub');
 const utils = require('../src/utils');
 const api = require('../src/api');
 
-describe('API', async function () {
-	this.timeout(120000);
+describe('API', async () => {
 	let readApi = false;
 	let writeApi = false;
 	const readApiPath = path.resolve(__dirname, '../public/openapi/read.yaml');
