@@ -465,7 +465,7 @@ const utils = {
 		// If it's already a Date
 		if (timestamp instanceof Date) {
 			const t = timestamp.getTime();
-			if (Number.isNaN(t)) return '';          // invalid Date -> same as "no value"
+			if (Number.isNaN(t)) return ''; // invalid Date -> same as "no value"
 			return timestamp.toISOString();
 		}
 
