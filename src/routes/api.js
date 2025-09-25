@@ -44,10 +44,10 @@ module.exports = function (app, middleware, controllers) {
 	], helpers.tryRoute(controllers.accounts.edit.uploadPicture));
 
 	router.get(
-	'/favorites/:student_id',
-	[...middlewares, middleware.ensureLoggedIn],
-	helpers.tryRoute(controllers.favorites.getForStudent)
-);
+		'/favorites/:student_id',
+		[...middlewares, middleware.ensureLoggedIn],
+		helpers.tryRoute(controllers.favorites.getForStudent)
+	);
 
 };
 
