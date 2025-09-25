@@ -29,7 +29,7 @@ Favorites.add = async function (studentId, announcementId) {
 	await db.setObject(`favorite:${favoriteId}`, {
 		studentId: studentId,
 		announcementId: announcementId,
-		timestamp: timestamp
+		timestamp: timestamp,
 	});
 };
 
@@ -71,7 +71,7 @@ Favorites.getAll = async function (studentId) {
 	// Transform to the expected format
 	const items = favoritesWithScores.map(item => ({
 		announcement_id: item.value,
-		timestamp: new Date(item.score)
+		timestamp: new Date(item.score),
 	}));
 	
 	return items;
