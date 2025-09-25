@@ -42,4 +42,12 @@ module.exports = function (app, middleware, controllers) {
 		middleware.canViewUsers,
 		middleware.checkAccountPermissions,
 	], helpers.tryRoute(controllers.accounts.edit.uploadPicture));
+
+	router.get(
+	'/favorites/:student_id',
+	[...middlewares, middleware.ensureLoggedIn],
+	helpers.tryRoute(controllers.favorites.getForStudent)
+);
+
 };
+
