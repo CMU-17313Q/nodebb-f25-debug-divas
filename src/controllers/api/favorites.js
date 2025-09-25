@@ -2,7 +2,7 @@
 
 //only a user can see their own favorites, if needed i can add admin override later
 
-const Favorites = require.main.require('./api/favorites');
+const Favorites = require.main.require('./src/api/favorites');
 
 // helper that we will use to get auntheticated user ID
 // we need this so that we can see who is making therequest to insert,remove,get favorites
