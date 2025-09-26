@@ -23,7 +23,22 @@
 		</li>
 		{{{ end }}}
 		{{{ end }}}
+
+		<!-- favorites side bar icon star -->
+
+    <li class="nav-item mx-2" title="Favorites">
+      <a class="nav-link navigation-link d-flex gap-2 justify-content-between align-items-center"
+         href="/favorites" aria-label="Favorites">
+        <span class="d-flex gap-2 align-items-center text-nowrap truncate-open">
+          <span class="position-relative">
+            <i class="fa fa-fw fa-star"></i>
+          </span>
+          <span class="nav-text small visible-open fw-semibold text-truncate">Favorites</span>
+        </span>
+      </a>
+    </li>
 	</ul>
+
 	<div class="sidebar-toggle-container align-self-start">
 		{{{ if !config.disableCustomUserSkins }}}
 		<!-- IMPORT partials/skin-switcher.tpl -->
