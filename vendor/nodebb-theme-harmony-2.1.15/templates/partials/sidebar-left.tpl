@@ -24,7 +24,7 @@
 		{{{ end }}}
 		{{{ end }}}
 
-		<!-- favorites side bar icon sta -->
+		<!-- favorites side bar icon star -->
 
     <li class="nav-item mx-2" title="Favorites">
       <a class="nav-link navigation-link d-flex gap-2 justify-content-between align-items-center"
