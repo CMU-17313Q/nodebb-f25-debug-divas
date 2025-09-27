@@ -15,14 +15,8 @@
 						<span class="text-capitalize fw-semibold">[[topic:favorite]]</span>
 
 
-
-
-
 				</a>
-			
-
 				
-				{{{! <!-- IMPORT partials/topic/favorites.tpl --> }}}
 				
 				<!-- IMPORT partials/topic/sort.tpl -->
 				<!-- IMPORT partials/topic/tools.tpl -->
