@@ -158,6 +158,25 @@ define('forum/topic/threadTools', [
 			changeWatching('ignore');
 		});
 
+		/////Handle Favorites Toggle 
+		topicContainer.on('click', '[component="topic/favorite"]', function () {
+			const el = $(this);
+			const tid = ajaxify.data.tid;
+			socket.emit('favorites.toggle', { tid }, function (err, result) {
+				if (err) {
+					return alerts.error(err.message);
+				}
+
+				alerts.success(result.favorited ? 'Added to favorites' : 'Removed from favorites');
+
+				//Toggle icon visibility
+				el.attr('data-favorited', result.favorited);
+				el.find('[component="topic/favorite/on"]').toggleClass('hidden', !result.favorited);
+				el.find('[component="topic/favorite/off"]').toggleClass('hidden', result.favorited);
+			});
+		});
+
+
 		function changeWatching(type, state = 1) {
 			const method = state ? 'put' : 'del';
 			api[method](`/topics/${tid}/${type}`, {}, () => {

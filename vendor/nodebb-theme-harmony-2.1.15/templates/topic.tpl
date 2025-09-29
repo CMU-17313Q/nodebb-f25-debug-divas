@@ -101,6 +101,21 @@
 									<!-- IMPORT partials/topic/reply-button.tpl -->
 									<!-- IMPORT partials/topic/mark-unread.tpl -->
 									<!-- IMPORT partials/topic/watch.tpl -->
+
+									<a component="topic/favorite"
+   										href="#"
+   										role="button"
+   										class="btn btn-ghost btn-sm d-flex align-items-center align-self-stretch gap-2 text-decoration-none"
+   										data-favorited="{favorited}"
+   										title="[[topic:favorite]]">
+
+   										<i component="topic/favorite/off" class="fa fa-star-o text-primary {{{ if favorited }}}hidden{{{ end }}}"></i>
+   										<i component="topic/favorite/on" class="fa fa-star text-primary {{{ if !favorited }}}hidden{{{ end }}}"></i>
+										<span class="text-capitalize fw-semibold">[[topic:favorite]]</span>
+
+									</a>
+
+
 									<!-- IMPORT partials/topic/sort.tpl -->
 									<!-- IMPORT partials/topic/tools.tpl -->
 								</div>
