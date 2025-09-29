@@ -30,115 +30,113 @@ function parseStudentId(req) {
 	return Number.isFinite(id) ? id : null;
 }
 
-module.exports = {
-	//to create a favorite, we need the authenticated user and the announcementId to add
+//to create a favorite, we need the authenticated user and the announcementId to add
+async function create(req, res, next) {
 
-	async create(req, res, next) {
+	try {
+
+		const uid = getAuthUid(res);
+		if (!uid) {
+			return res.status(401).json({ error: 'Unauthorized' });
+		}
+
+		const announcementId = parseAnnouncementId(req);
+		if (!announcementId) {
+			return res.status(400).json({ error: 'Missing announcementId/targetId' });
+		}
 
 		try {
+			await Favorites.add(uid, announcementId);
 
-			const uid = getAuthUid(res);
-			if (!uid) {
-				return res.status(401).json({ error: 'Unauthorized' });
-			}
+			return res.status(201).json({
+				uid,
+				targetId: announcementId,
+				favorited: true,
+			});
 
-			const announcementId = parseAnnouncementId(req);
-			if (!announcementId) {
-				return res.status(400).json({ error: 'Missing announcementId/targetId' });
-			}
+		} catch (err) {
 
-			try {
+			//if they try to favorite something already done then we will get message
+			if (err.message && /Already favorited/i.test(err.message)) {
 
-				await Favorites.add(uid, announcementId);
-
-				return res.status(201).json({
+				return res.status(200).json({
 					uid,
 					targetId: announcementId,
 					favorited: true,
+					alreadyFavorited: true,
 				});
-
-			} catch (err) {
-
-				//if they try to favorite something already done then we will get message
-				if (err.message && /Already favorited/i.test(err.message)) {
-
-					return res.status(200).json({
-						uid,
-						targetId: announcementId,
-						favorited: true,
-						alreadyFavorited: true,
-					});
-				}
-				throw err;
 			}
-
-		} catch (err) {
-			return next(err);
+			throw err;
 		}
-	},
 
-	//to destroy a favorite, we need the authenticated user and the announcementId to remove
-	async destroy(req, res, next) {
+	} catch (err) {
+		return next(err);
+	}
+}
 
-		try {
-			const uid = getAuthUid(res);
-			if (!uid) {
-				return res.status(401).json({ error: 'Unauthorized' });
-			}
+//to destroy a favorite, we need the authenticated user and the announcementId to remove
+async function destroy(req, res, next) {
 
-			const announcementId = parseAnnouncementId(req);
-			if (!announcementId) {
-				return res.status(400).json({ error: 'Missing announcementId/targetId' });
-			}
-
-			// error if nothing found
-			await Favorites.remove(uid, announcementId);
-			return res.status(204).end();
-
-		} catch (err) {
-			return next(err);
+	try {
+		const uid = getAuthUid(res);
+		if (!uid) {
+			return res.status(401).json({ error: 'Unauthorized' });
 		}
-	},
 
-	//to list all favorites for the currently logged-in (authenticated) user
-	async listMine(req, res, next) {
-		try {
-			// Temporary - bypass auth check for testing
-			return res.status(200).json({
-				uid: 1,
-				items: [
-					{ announcement_id: 123, timestamp: new Date() },
-				],
-			});
-		} catch (err) {
-			return next(err);
+		const announcementId = parseAnnouncementId(req);
+		if (!announcementId) {
+			return res.status(400).json({ error: 'Missing announcementId/targetId' });
 		}
-	},
 
-	async getForStudent(req, res, next) {
-		try {
-			const authUid = getAuthUid(res);
-			if (!authUid) {
-				return res.status(401).json({ error: 'Unauthorized' });
-			}
+		// error if nothing found
+		await Favorites.remove(uid, announcementId);
+		return res.status(204).end();
 
-			const studentId = parseStudentId(req);
-			if (!studentId) {
-				return res.status(400).json({ error: 'Invalid student_id' });
-			}
+	} catch (err) {
+		return next(err);
+	}
+}
 
-			// allow self or admin
-			if (authUid !== studentId && !isAdmin(res)) {
-				return res.status(403).json({ error: 'Forbidden' });
-			}
+//to list all favorites for the currently logged-in (authenticated) user
+async function listMine(req, res, next) {
+	try {
+		// Temporary - bypass auth check for testing
+		return res.status(200).json({
+			uid: 1,
+			items: [
+				{ announcement_id: 123, timestamp: new Date() },
+			],
+		});
+	} catch (err) {
+		return next(err);
+	}
+}
 
-			const items = await Favorites.getAll(studentId);
-			return res.status(200).json({
-				uid: studentId,
-				items: Array.isArray(items) ? items : [],
-			});
-		} catch (err) {
-			return next(err);
+async function getForStudent(req, res, next) {
+	try {
+		const authUid = getAuthUid(res);
+		if (!authUid) {
+			return res.status(401).json({ error: 'Unauthorized' });
 		}
-	},
-};
+
+		const studentId = parseStudentId(req);
+		if (!studentId) {
+			return res.status(400).json({ error: 'Invalid student_id' });
+		}
+
+		// allow self or admin
+		if (authUid !== studentId && !isAdmin(res)) {
+			return res.status(403).json({ error: 'Forbidden' });
+		}
+
+		const items = await Favorites.getAll(studentId);
+		return res.status(200).json({
+			uid: studentId,
+			items: Array.isArray(items) ? items : [],
+		});
+	} catch (err) {
+		return next(err);
+	}
+}
+
+module.exports = { create, destroy, listMine, getForStudent };
