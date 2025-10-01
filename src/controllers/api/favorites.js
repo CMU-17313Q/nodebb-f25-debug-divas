@@ -139,4 +139,18 @@ async function getForStudent(req, res, next) {
 	}
 }
 
-module.exports = { create, destroy, listMine, getForStudent };
+// Page render function for favorites view
+async function get(req, res, next) {
+	try {
+		res.render('favorites', {
+			title: '[[pages:favorites]]',
+			breadcrumbs: [
+				{ text: '[[pages:favorites]]' },
+			],
+		});
+	} catch (err) {
+		return next(err);
+	}
+}
+
+module.exports = { create, destroy, listMine, getForStudent, get };
