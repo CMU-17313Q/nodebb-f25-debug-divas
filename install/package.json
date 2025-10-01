@@ -42,6 +42,7 @@
         "archiver": "7.0.1",
         "async": "3.2.6",
         "autoprefixer": "10.4.21",
+        "bad-words": "3.0.4",
         "bcryptjs": "3.0.2",
         "benchpressjs": "2.5.5",
         "body-parser": "2.2.0",
