@@ -162,7 +162,7 @@ define('forum/topic/threadTools', [
 		topicContainer.on('click', '[component="topic/favorite"]', function () {
 			const el = $(this);
 			const tid = ajaxify.data.tid;
-			socket.emit('favorites.toggle', { tid }, function (err, result) {
+			socket.emit('plugins.favorites.toggle', { tid }, function (err, result) { 
 				if (err) {
 					return alerts.error(err.message);
 				}
