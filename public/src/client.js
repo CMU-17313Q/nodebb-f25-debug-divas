@@ -26,17 +26,17 @@ app.onDomReady();
   function wc_countChars(text, mode = 'withSpaces') {
     if (!text) return 0;
     const s = mode === 'withoutSpaces' ? text.replace(/\s+/g, '') : text;
-    return [...s].length; 
+    return [...s].length;
   }
 
-  
+
   function wc_findMountPoint(composerEl) {
     return (
-      composerEl.querySelector('.formatting-bar') ||                  
-      composerEl.querySelector('.composer-footer .control-bar') ||    
-      composerEl.querySelector('.form-actions') ||                   
-      composerEl.querySelector('.composer-footer') ||               
-      composerEl                                                     
+      composerEl.querySelector('.formatting-bar') ||
+      composerEl.querySelector('.composer-footer .control-bar') ||
+      composerEl.querySelector('.form-actions') ||
+      composerEl.querySelector('.composer-footer') ||
+      composerEl
     );
   }
 
