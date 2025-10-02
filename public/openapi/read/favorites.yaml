@@ -1,3 +1,47 @@
+get:
+  tags:
+    - favorites
+  summary: Get user's favorites
+  description: Get the current user's favorite announcements
+  security:
+    - BearerAuth: []
+    - cookieAuth: []
+  responses:
+    '200':
+      description: User's favorites retrieved successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              uid:
+                type: integer
+                description: User ID
+                example: 1
+              items:
+                type: array
+                description: List of favorite announcements
+                items:
+                  type: object
+                  properties:
+                    announcement_id:
+                      type: integer
+                      description: The announcement ID
+                      example: 123
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: When the favorite was added
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unauthorized"
 post:
   tags:
     - favorites

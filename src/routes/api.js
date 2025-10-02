@@ -25,6 +25,7 @@ module.exports = function (app, middleware, controllers) {
 	router.get('/topic/pagination/:topic_id', [...middlewares], helpers.tryRoute(controllers.topics.pagination));
 
 	// favorites routes
+	router.get('/favorites', [...middlewares], helpers.tryRoute(favoritesController.listMine));
 	router.post('/favorites', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.create));
 	router.delete('/favorites/:announcementId', [...middlewares, middleware.ensureLoggedIn], helpers.tryRoute(favoritesController.destroy));
 	router.get('/favorites/mine', [...middlewares], helpers.tryRoute(favoritesController.listMine));
