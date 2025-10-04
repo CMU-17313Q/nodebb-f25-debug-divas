@@ -1,6 +1,6 @@
 'use strict';
 
-const Favorites = require('../api/favorites'); 
+const Favorites = require('../api/favorites');
 
 const FavoritesSockets = {};
 
