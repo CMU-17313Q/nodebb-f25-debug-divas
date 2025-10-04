@@ -10,7 +10,9 @@ profanityFilter.clean = function (text) {
 	if (!text || typeof text !== 'string') {
 		return text;
 	}
-	return filter.clean(text);
+	const cleaned = filter.clean(text);
+	// Ensure we always return a string, never null or undefined
+	return cleaned || text;
 };
 
 profanityFilter.isProfane = function (text) {

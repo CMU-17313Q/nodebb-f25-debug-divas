@@ -407,6 +407,7 @@ chatsAPI.getIpAddress = async (caller, { mid }) => {
 
 chatsAPI.editMessage = async (caller, { mid, roomId, message }) => {
 	await messaging.canEdit(mid, caller.uid);
+	await messaging.checkContent(message);
 	// Apply profanity filter
 	const filteredMessage = profanityFilter.clean(message);
 	await messaging.editMessage(caller.uid, mid, roomId, filteredMessage);
