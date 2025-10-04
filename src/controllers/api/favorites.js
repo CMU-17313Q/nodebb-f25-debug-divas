@@ -141,16 +141,23 @@ async function getForStudent(req, res, next) {
 
 // Page render function for favorites view
 async function get(req, res, next) {
-	try {
-		res.render('favorites', {
-			title: '[[pages:favorites]]',
-			breadcrumbs: [
-				{ text: '[[pages:favorites]]' },
-			],
-		});
-	} catch (err) {
-		return next(err);
-	}
+  try {
+    const uid =
+      (res && res.locals && res.locals.uid) ||
+      (typeof req.uid === 'number' ? req.uid : null) ||
+      (req.user && req.user.uid) || null;
+
+    const items = uid ? await Favorites.getAll(uid) : [];
+
+    res.render('favorites', {
+      title: '[[pages:favorites]]',
+      breadcrumbs: [{ text: '[[pages:favorites]]' }],
+      items: Array.isArray(items) ? items : [],
+    });
+  } catch (err) {
+    return next(err);
+  }
 }
+
 
 module.exports = { create, destroy, listMine, getForStudent, get };
