@@ -1,0 +1,20 @@
+get:
+  tags:
+    - admin
+  summary: Get list of banned words
+  description: Retrieves the current list of profanity-filtered words
+  responses:
+    '200':
+      description: Successfully retrieved banned words list
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - words
+            properties:
+              words:
+                type: array
+                items:
+                  type: string
+                description: Array of banned/filtered words
