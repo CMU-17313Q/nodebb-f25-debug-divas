@@ -20,6 +20,10 @@ const socketHelpers = require('../socket.io/helpers');
 const translator = require('../translator');
 const notifications = require('../notifications');
 
+const Reactions = require('../plugins/reactions');
+
+
+
 const postsAPI = module.exports;
 
 postsAPI.get = async function (caller, data) {
@@ -41,6 +45,7 @@ postsAPI.get = async function (caller, data) {
 	if (post.deleted && !(userPrivilege.isAdminOrMod || selfPost)) {
 		post.content = '[[topic:post-is-deleted]]';
 	}
+	await Reactions.attachReactionsToPost(post, caller.uid);
 
 	return post;
 };

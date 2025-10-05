@@ -37,6 +37,23 @@ PostObject:
     timestampISO:
       type: string
       description: An ISO 8601 formatted date string (complementing `timestamp`)
+    reactions: 
+      type: object
+      additionalProperties:
+        type: number
+      description: A map of emoji reactions and their counts
+      example:
+        "🎉": 1
+        "😂": 2
+
+    myReactions:
+      type: array
+      items:
+        type: string
+      description: List of emoji reactions made by the current user
+      example:
+        - "🎉"
+
     user:
       type: object
       properties:

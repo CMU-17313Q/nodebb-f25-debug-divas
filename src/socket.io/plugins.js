@@ -1,17 +1,25 @@
 'use strict';
 
-const SocketPlugins = {};
+const Reactions = require('../plugins/reactions'); // This is your backend logic file
 
-/*
-	This file is provided exclusively so that plugins can require it and add their own socket listeners.
+const Plugins = {};
 
-	How? From your plugin:
+// Register the reactions namespace
+Plugins.reactions = {};
 
-		const SocketPlugins = require.main.require('./src/socket.io/plugins');
-		SocketPlugins.myPlugin = {};
-		SocketPlugins.myPlugin.myMethod = function(socket, data, callback) { ... };
+/**
+ * Socket event: plugins.reactions.toggle
+ * Called from frontend when a user clicks a reaction
+ */
+Plugins.reactions.toggle = async function (socket, { pid, emoji }) {
+	const {uid} = socket;
+	console.log('Actual UID from socket:', uid); // ← Add this
+	if (!uid) {
+		throw new Error('Not logged in');
+	}
 
-	Be a good lad and namespace your methods.
-*/
+	const counts = await Reactions.toggleReaction(pid, emoji, uid);
+	return { pid, counts };
+};
 
-module.exports = SocketPlugins;
+module.exports = Plugins;
