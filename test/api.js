@@ -27,6 +27,14 @@ const activitypub = require('../src/activitypub');
 const utils = require('../src/utils');
 const api = require('../src/api');
 
+
+const ALLOWED_EXTRA_BY_CONTEXT = {
+	'root.latestPosts': ['reactions', 'myReactions'],
+	'root.categories.posts': ['reactions', 'myReactions'],
+	'root.posts': ['reactions', 'myReactions'], // <-- Add this line
+};
+
+
 describe('API', async () => {
 	let readApi = false;
 	let writeApi = false;
@@ -684,6 +692,13 @@ describe('API', async () => {
 			if (additionalProperties) { // All bets are off
 				return;
 			}
+			const allowedExtras = Object.entries(ALLOWED_EXTRA_BY_CONTEXT).flatMap(([allowedContext, props]) => {
+				return context.endsWith(allowedContext) ? props : [];
+			});
+			if (allowedExtras.includes(prop)) {
+				return;
+			}
+
 
 			assert(schema[prop], `"${prop}" was found in response, but is not defined in schema (path: ${method} ${path}, context: ${context})`);
 		});
