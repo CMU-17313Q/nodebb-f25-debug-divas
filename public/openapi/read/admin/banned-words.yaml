@@ -10,6 +10,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - words
             properties:
               words:
                 type: array
