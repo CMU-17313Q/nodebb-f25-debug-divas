@@ -62,9 +62,23 @@ Favorites.getAll = async function (studentId) {
 	if (!studentId) {
 		throw new Error('Missing studentId');
 	}
-	
-	// Return empty array for now to eliminate timeout
-	return [];
+
+	const favoriteKey = `user:${studentId}:favorites`;
+
+	// newest first (we used timestamp scores when adding)
+	const ids = await db.getSortedSetRevRange(favoriteKey, 0, -1); // returns array of announcementIds (as strings)
+	if (!ids || !ids.length) {
+		return [];
+	}
+
+	// fetch scores (timestamps) for each id
+	// NodeBB db adapter supports fetching scores per member
+	const scores = await db.sortedSetScores(favoriteKey, ids); // array of numbers (timestamps)
+
+	return ids.map((id, i) => ({
+		announcement_id: Number(id),
+		timestamp: new Date(Number(scores[i] || 0)).toISOString(),
+	}));
 };
 
 module.exports = Favorites;
