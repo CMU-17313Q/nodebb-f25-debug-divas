@@ -23,8 +23,11 @@ profanityFilter.isProfane = function (text) {
 };
 
 profanityFilter.getWords = function () {
-	return Array.from(filter.list);
+	const allWords = Array.from(filter.list);
+	const excludedWords = filter.exclude || [];
+	return allWords.filter(word => !excludedWords.includes(word));
 };
+
 
 profanityFilter.addWord = function (word) {
 	if (!word || typeof word !== 'string') {
