@@ -68,4 +68,10 @@ adminController.getConfig = async (req, res) => {
 	res.json(config);
 };
 
+adminController.getBannedWords = async (req, res) => {
+	const api = require('../api');
+	const result = await api.admin.getBannedWords(req);
+	res.json(result);
+};
+
 module.exports = adminController;
