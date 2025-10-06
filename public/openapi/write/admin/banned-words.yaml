@@ -10,24 +10,78 @@ get:
         application/json:
           schema:
             type: object
-            required:
-              - status
-              - response
             properties:
               status:
-                type: object
-                properties:
-                  code:
-                    type: string
-                  message:
-                    type: string
+                $ref: ../../components/schemas/Status.yaml#/Status
               response:
                 type: object
-                required:
-                  - words
                 properties:
                   words:
                     type: array
                     items:
                       type: string
                     description: Array of banned/filtered words
+post:
+  tags:
+    - admin
+  summary: Add a banned word
+  description: Adds a word to the profanity filter list
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - word
+          properties:
+            word:
+              type: string
+              description: The word to ban
+  responses:
+    '200':
+      description: Successfully added banned word
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+delete:
+  tags:
+    - admin
+  summary: Remove a banned word
+  description: Removes a word from the profanity filter list
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - word
+          properties:
+            word:
+              type: string
+              description: The word to remove from the ban list
+  responses:
+    '200':
+      description: Successfully removed banned word
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties:
+                  success:
+                    type: boolean
