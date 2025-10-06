@@ -5,9 +5,11 @@
 	{{{ end }}}
 </div>
 {{{ end }}}
+
 {{{ if (./parent && !hideParent) }}}
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
+
 <div class="d-flex align-items-start gap-3 post-container-parent">
 	<div class="bg-body d-none d-sm-block rounded-circle" style="outline: 2px solid var(--bs-body-bg);">
 		<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
@@ -22,6 +24,7 @@
 			{{{ end }}}
 		</a>
 	</div>
+
 	<div class="post-container d-flex gap-2 flex-grow-1 flex-column w-100" style="min-width:0;">
 		<div class="d-flex align-items-start justify-content-between gap-1 flex-nowrap w-100 post-header" itemprop="author" itemscope itemtype="https://schema.org/Person">
 			<div class="d-flex gap-1 flex-wrap align-items-center text-truncate">
@@ -74,6 +77,7 @@
 				</div>
 				{{{ end }}}
 			</div>
+
 			<div class="d-flex align-items-center gap-1 justify-content-end">
 				<span class="bookmarked opacity-0 text-primary"><i class="fa fa-bookmark-o"></i></span>
 				<a href="{config.relative_path}/post/{encodeURIComponent(./pid)}" class="post-index text-muted d-none d-md-inline">#{increment(./index, "1")}</a>
@@ -107,8 +111,57 @@
 					<i class="fa fa-fw fa-chevron-down" component="post/replies/open"></i>
 				</a>
 				{{{ end }}}
+
 				<div component="post/actions" class="d-flex flex-grow-1 align-items-center justify-content-end gap-1 post-tools">
+
+					<!-- Reactions -->
+					<div class="post-reactions d-flex gap-1 mt-2"
+						data-component="post/reactions"
+						data-pid="{./pid}">
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="👍" aria-pressed="false">
+							<span class="reaction-emoji">👍</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="😂" aria-pressed="false">
+							<span class="reaction-emoji">😂</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="🎉" aria-pressed="false">
+							<span class="reaction-emoji">🎉</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="😢" aria-pressed="false">
+							<span class="reaction-emoji">😢</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="😡" aria-pressed="false">
+							<span class="reaction-emoji">😡</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="👏" aria-pressed="false">
+							<span class="reaction-emoji">👏</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="🙌" aria-pressed="false">
+							<span class="reaction-emoji">🙌</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+
+						<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="👀" aria-pressed="false">
+							<span class="reaction-emoji">👀</span>
+							<span class="reaction-count hidden">0</span>
+						</button>
+					</div>
+					<!-- /Reactions -->
+
 					<!-- IMPORT partials/topic/reactions.tpl -->
+
 					<a component="post/reply" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:reply]]"><i class="fa fa-fw fa-reply text-primary"></i></a>
 					<a component="post/quote" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:quote]]"><i class="fa fa-fw fa-quote-right text-primary"></i></a>
 
