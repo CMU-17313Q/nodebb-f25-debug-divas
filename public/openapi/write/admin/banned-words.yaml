@@ -38,6 +38,7 @@ post:
             word:
               type: string
               description: The word to ban
+              example: badword
   responses:
     '200':
       description: Successfully added banned word
@@ -53,6 +54,12 @@ post:
                 properties:
                   success:
                     type: boolean
+    '400':
+      description: Bad request - missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/Error.yaml#/Error
 delete:
   tags:
     - admin
@@ -70,6 +77,7 @@ delete:
             word:
               type: string
               description: The word to remove from the ban list
+              example: badword
   responses:
     '200':
       description: Successfully removed banned word
@@ -85,3 +93,9 @@ delete:
                 properties:
                   success:
                     type: boolean
+    '400':
+      description: Bad request - missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/Error.yaml#/Error
