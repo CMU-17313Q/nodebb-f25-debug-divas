@@ -11,10 +11,23 @@ get:
           schema:
             type: object
             required:
-              - words
+              - status
+              - response
             properties:
-              words:
-                type: array
-                items:
-                  type: string
-                description: Array of banned/filtered words
+              status:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              response:
+                type: object
+                required:
+                  - words
+                properties:
+                  words:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of banned/filtered words
