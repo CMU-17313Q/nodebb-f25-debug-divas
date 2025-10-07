@@ -19,6 +19,7 @@ const websockets = require('../socket.io');
 const socketHelpers = require('../socket.io/helpers');
 const translator = require('../translator');
 const notifications = require('../notifications');
+const profanityFilter = require('../profanity/filter');
 
 const postsAPI = module.exports;
 
@@ -669,3 +670,32 @@ async function sendQueueNotification(type, targetUid, path, notificationText) {
 	const notifObj = await notifications.create(notifData);
 	await notifications.push(notifObj, [targetUid]);
 }
+
+postsAPI.checkProfanity = async function (caller, data) {
+	if (!data || !data.content) {
+		throw new Error('[[error:invalid-data]]');
+	}
+
+	const content = data.content.toString();
+	const hasProfanity = profanityFilter.isProfane(content);
+	const profanityAction = meta.config.profanityAction || 'block';
+
+	if (hasProfanity) {
+		const words = profanityFilter.getWords();
+		const foundWords = words.filter(word => content.toLowerCase().includes(word.toLowerCase()));
+
+		return {
+			hasProfanity: true,
+			action: profanityAction,
+			foundWords: foundWords,
+			filteredContent: profanityFilter.clean(content)
+		};
+	}
+
+	return {
+		hasProfanity: false,
+		action: profanityAction,
+		foundWords: [],
+		filteredContent: content
+	};
+};
