@@ -688,7 +688,7 @@ postsAPI.checkProfanity = async function (caller, data) {
 			hasProfanity: true,
 			action: profanityAction,
 			foundWords: foundWords,
-			filteredContent: profanityFilter.clean(content)
+			filteredContent: profanityFilter.clean(content),
 		};
 	}
 
@@ -696,6 +696,6 @@ postsAPI.checkProfanity = async function (caller, data) {
 		hasProfanity: false,
 		action: profanityAction,
 		foundWords: [],
-		filteredContent: content
+		filteredContent: content,
 	};
 };

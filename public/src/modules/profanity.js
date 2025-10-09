@@ -3,22 +3,6 @@
 define('profanity', ['api', 'alerts'], function (api, alerts) {
 	const Profanity = {};
 
-	function checkProfanityMock(text) {
-		const profanityWords = ['badword1', 'badword2', 'test123'];
-		const foundWords = [];
-
-		profanityWords.forEach(word => {
-			if (text.toLowerCase().includes(word)) {
-				foundWords.push(word);
-			}
-		});
-
-		return {
-			hasProfanity: foundWords.length > 0,
-			foundWords: foundWords,
-			filteredContent: text
-		};
-	}
 
 	function checkProfanityAPI(text) {
 		return new Promise((resolve, reject) => {

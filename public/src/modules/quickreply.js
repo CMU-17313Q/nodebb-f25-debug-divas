@@ -2,10 +2,10 @@
 
 define('quickreply', [
 	'components', 'autocomplete', 'api',
-	'alerts', 'uploadHelpers', 'mousetrap', 'storage', 'hooks',
+	'alerts', 'uploadHelpers', 'mousetrap', 'storage', 'hooks', 'profanity',
 ], function (
 	components, autocomplete, api,
-	alerts, uploadHelpers, mousetrap, storage, hooks
+	alerts, uploadHelpers, mousetrap, storage, hooks, profanity
 ) {
 	const QuickReply = {
 		_autocomplete: null,
