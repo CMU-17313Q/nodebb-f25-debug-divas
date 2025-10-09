@@ -23,13 +23,15 @@ if (isBrowser) {
 
 	// helper to calculate character count
 	function countChars(text, mode = 'withSpaces') {
-
 		const s = mode === 'withoutSpaces' ? text.replace(/\s+/g, '') : text;
 
 		if (typeof Intl !== 'undefined' && Intl.Segmenter) {
 			const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
 			let count = 0;
-			for (const _ of segmenter.segment(s)) count++;
+
+			for (const _ of segmenter.segment(s)) {
+				count++;
+			}
 			return count;
 		}
 		return [...s].length;
@@ -38,7 +40,7 @@ if (isBrowser) {
 	// helper to calculate reading time
 	function estimateReadingTime(words, wpm = 200) {
 		const safeWords = Math.max(0, Number(words) || 0);
-  		const safeWpm   = Number(wpm) > 0 ? Number(wpm) : 200;  
+		const safeWpm = Number(wpm) > 0 ? Number(wpm) : 200;
 
 		const seconds = Math.round((safeWords / safeWpm) * 60);
 
@@ -55,10 +57,10 @@ if (isBrowser) {
 	function getChipMount(composerEl) {
 		return (
 			composerEl.querySelector('.formatting-bar') ||
-      		composerEl.querySelector('.composer-footer .control-bar') ||
-   			composerEl.querySelector('.form-actions') ||
-     		composerEl.querySelector('.composer-footer') ||
-      		composerEl
+			composerEl.querySelector('.composer-footer .control-bar') ||
+			composerEl.querySelector('.form-actions') ||
+			composerEl.querySelector('.composer-footer') ||
+			composerEl
 		);
 	}
 
@@ -123,7 +125,7 @@ if (isBrowser) {
 		update();
 	}
 
-	
+
 	if (isBrowser) {
 		// show when there is a new discussion 
 		const wcObserver = new MutationObserver(() => {
@@ -139,7 +141,7 @@ if (isBrowser) {
 		} else {
 			document.querySelectorAll('.composer').forEach((c) => wireComposerMetrics(c));
 		}
-	}	
+	}
 
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = {
@@ -147,6 +149,6 @@ if (isBrowser) {
 			countChars,
 			estimateReadingTime,
 		};
-	}	
+	}
 
 })();
