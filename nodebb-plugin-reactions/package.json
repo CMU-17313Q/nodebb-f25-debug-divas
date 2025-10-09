@@ -1,0 +1,9 @@
+{
+  "name": "nodebb-plugin-reactions",
+  "version": "1.0.0",
+  "description": "Emoji Reactions plugin for NodeBB",
+  "main": "library.js",
+  "nbbpm": {
+    "compatibility": "^3.0.0"
+  }
+}

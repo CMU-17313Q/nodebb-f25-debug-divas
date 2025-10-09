@@ -1,0 +1,15 @@
+{
+  "id": "nodebb-plugin-reactions",
+  "name": "Emoji Reactions",
+  "description": "Adds emoji reactions to posts",
+  "library": "./library.js",
+  "staticDirs": {
+    "public": "public"
+  },
+  "scripts": [
+    "public/lib/reactions.js"
+  ],
+  "hooks": [
+    { "hook": "static:app.load", "method": "init" }
+  ]
+}
