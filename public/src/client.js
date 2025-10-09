@@ -28,7 +28,7 @@ if (isBrowser) {
 		if (typeof Intl !== 'undefined' && Intl.Segmenter) {
 			const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
 			let count = 0;
-
+			// eslint-disable-next-line no-unused-vars
 			for (const _ of segmenter.segment(s)) {
 				count++;
 			}
@@ -36,6 +36,8 @@ if (isBrowser) {
 		}
 		return [...s].length;
 	}
+
+
 
 	// helper to calculate reading time
 	function estimateReadingTime(words, wpm = 200) {
