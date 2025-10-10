@@ -223,8 +223,8 @@ describe('Profanity Filter', () => {
 				body: { content: 'This is a damn test' },
 			};
 			mockRes = {
-				status: function(code) { this.statusCode = code; return this; },
-				json: function(data) { responseData = data; return this; },
+				status: function (code) { this.statusCode = code; return this; },
+				json: function (data) { responseData = data; return this; },
 			};
 		});
 
@@ -233,7 +233,7 @@ describe('Profanity Filter', () => {
 
 			// Mock the helpers.formatApiResponse function
 			const originalFormatApiResponse = require('../src/controllers/helpers').formatApiResponse;
-			require('../src/controllers/helpers').formatApiResponse = function(status, res, data) {
+			require('../src/controllers/helpers').formatApiResponse = function (status, res, data) {
 				res.status(status);
 				res.json({ status: { code: status === 200 ? 'ok' : 'error' }, response: data });
 			};
