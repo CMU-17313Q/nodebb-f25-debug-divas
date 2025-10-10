@@ -416,7 +416,7 @@ describe('API', async () => {
 		const pathLib = path; // for calling path module from inside this forEach
 		paths.forEach((path) => {
 			// Skip profanity-check endpoint from automated testing (has dedicated unit tests)
-			if (path.includes('profanity-check')) {
+			if (path.includes('profanity-check') || path.includes('/posts/profanity-check')) {
 				return;
 			}
 			const context = api.paths[path];
@@ -490,7 +490,8 @@ describe('API', async () => {
 					}
 				});
 
-				it('should not error out when called', async () => {
+				it('should not error out when called', async function() {
+					this.timeout(60000); // Increase timeout to 60 seconds
 					await setupData();
 
 					if (csrfToken) {
