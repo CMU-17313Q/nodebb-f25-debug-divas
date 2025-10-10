@@ -490,7 +490,7 @@ describe('API', async () => {
 					}
 				});
 
-				it('should not error out when called', async function() {
+				it('should not error out when called', async function () {
 					this.timeout(60000); // Increase timeout to 60 seconds
 					await setupData();
 
