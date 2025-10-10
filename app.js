@@ -18,6 +18,9 @@
 */
 
 'use strict';
+// --- Force load of custom socket.io plugins handler ---
+
+
 
 require('./require-main');
 

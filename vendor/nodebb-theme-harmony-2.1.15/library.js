@@ -186,3 +186,11 @@ library.filterMiddlewareRenderHeader = async function (hookData) {
 	hookData.templateData.bootswatchSkinOptions = await meta.css.getSkinSwitcherOptions(hookData.req.uid);
 	return hookData;
 };
+
+// === START OF REACTIONS LOGIC ===
+const sockets = require.main.require('./src/socket.io/plugins');
+const reactions = require('./lib/reactions');
+
+// Register the toggle handler from /lib/reactions.js
+sockets.reactions = {};
+sockets.reactions.toggle = reactions.toggle;

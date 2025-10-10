@@ -1,25 +1,28 @@
 {
-	"id": "nodebb-theme-harmony",
-	"hooks": [
-		{ "hook": "static:app.load", "method": "init" },
-		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
-		{ "hook": "filter:widgets.getAreas", "method": "defineWidgetAreas" },
-		{ "hook": "filter:config.get", "method": "getThemeConfig" },
-		{ "hook": "filter:settings.get", "method": "getAdminSettings"},
-		{ "hook": "filter:user.saveSettings", "method": "saveUserSettings" },
-		{ "hook": "filter:user.profileMenu", "method": "addProfileItem" },
-		{ "hook": "filter:middleware.renderHeader", "method": "filterMiddlewareRenderHeader" }
-	],
-	"scripts": [
-		"public/harmony.js"
-	],
-	"modules": {
-		"../admin/plugins/harmony.js": "public/admin.js",
-		"../client/account/theme.js": "public/settings.js"
-	},
-	"staticDirs": {
-		"inter": "node_modules/@fontsource/inter/files",
-		"poppins": "node_modules/@fontsource/poppins/files"
-	},
-	"languages": "languages"
+  "id": "nodebb-theme-harmony",
+  "name": "Harmony",
+  "description": "The default modern NodeBB theme.",
+  "url": "https://github.com/NodeBB/nodebb-theme-harmony",
+  "version": "2.1.15",
+  "library": "library.js",
+  "hooks": [
+    { "hook": "static:app.load", "method": "init" },
+    { "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
+    { "hook": "filter:widgets.getAreas", "method": "defineWidgetAreas" },
+    { "hook": "filter:config.get", "method": "themeConfig" },
+    { "hook": "filter:settings.get", "method": "getAdminSettings" },
+    { "hook": "filter:middleware.renderHeader", "method": "filterMiddlewareRenderHeader" }
+  ],
+  "scripts": [
+    "public/harmony.js"
+  ],
+  "modules": {
+    "../admin/pluginås/harmony.js": "public/admin.js",
+    "../client/account/theme.js": "public/settings.js"
+  },
+  "staticDirs": {
+    "inter": "node_modules/@fontsource/inter/files",
+    "poppins": "node_modules/@fontsource/poppins/files"
+  },
+  "languages": "languages"
 }
