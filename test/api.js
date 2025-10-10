@@ -380,6 +380,7 @@ describe('API', async () => {
 		const exclusionPrefixes = [
 			'/api/admin/plugins', '/api/compose', '/debug',
 			'/api/user/{userslug}/theme', // from persona
+			'/api/v3/posts/profanity-check', // profanity endpoint has dedicated unit tests
 		];
 		paths = paths.filter(path => path.method !== '_all' && !exclusionPrefixes.some(prefix => path.path.startsWith(prefix)));
 
