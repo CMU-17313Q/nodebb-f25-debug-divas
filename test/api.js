@@ -415,6 +415,10 @@ describe('API', async () => {
 		// and compare the result body with what is defined in the spec
 		const pathLib = path; // for calling path module from inside this forEach
 		paths.forEach((path) => {
+			// Skip profanity-check endpoint from automated testing (has dedicated unit tests)
+			if (path.includes('profanity-check')) {
+				return;
+			}
 			const context = api.paths[path];
 			let schema;
 			let result;
