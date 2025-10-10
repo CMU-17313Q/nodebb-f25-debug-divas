@@ -7,6 +7,8 @@ const user = require('../src/user');
 const categories = require('../src/categories');
 const messaging = require('../src/messaging');
 const profanityFilter = require('../src/profanity/filter');
+const api = require('../src/api');
+const meta = require('../src/meta');
 
 describe('Profanity Filter', () => {
 	let testUid;
@@ -113,6 +115,95 @@ describe('Profanity Filter', () => {
 			const lastMessage = messages[messages.length - 1];
 			assert(lastMessage.content.includes('***'));
 			assert(!lastMessage.content.includes('damn'));
+		});
+	});
+
+	describe('API Profanity Check', () => {
+		beforeEach(async () => {
+			await meta.configs.set('profanityAction', 'block');
+		});
+
+		it('should detect profanity and return block action', async () => {
+			const result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result.hasProfanity, true);
+			assert.strictEqual(result.action, 'block');
+			assert(Array.isArray(result.foundWords));
+			assert(result.foundWords.length > 0);
+		});
+
+		it('should not detect profanity in clean content', async () => {
+			const result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a clean test' });
+			assert.strictEqual(result.hasProfanity, false);
+			assert.strictEqual(result.action, 'block');
+			assert(Array.isArray(result.foundWords));
+			assert.strictEqual(result.foundWords.length, 0);
+		});
+
+		it('should return filter action when configured', async () => {
+			await meta.configs.set('profanityAction', 'filter');
+			const result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result.hasProfanity, true);
+			assert.strictEqual(result.action, 'filter');
+			assert(result.filteredContent.includes('***'));
+			assert(!result.filteredContent.includes('damn'));
+		});
+
+		it('should provide filtered content for filter action', async () => {
+			await meta.configs.set('profanityAction', 'filter');
+			const result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test with shit content' });
+			assert.strictEqual(result.hasProfanity, true);
+			assert.strictEqual(result.action, 'filter');
+			assert(result.filteredContent.includes('***'));
+			assert(!result.filteredContent.includes('damn'));
+			assert(!result.filteredContent.includes('shit'));
+		});
+
+		it('should default to block action when no setting is configured', async () => {
+			await meta.configs.set('profanityAction', '');
+			const result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result.hasProfanity, true);
+			assert.strictEqual(result.action, 'block');
+		});
+	});
+
+	describe('Admin Settings Integration', () => {
+		it('should persist profanity action setting', async () => {
+			await meta.configs.set('profanityAction', 'filter');
+			const setting = await meta.configs.get('profanityAction');
+			assert.strictEqual(setting, 'filter');
+		});
+
+		it('should change profanity behavior when admin changes setting', async () => {
+			await meta.configs.set('profanityAction', 'block');
+			let result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result.action, 'block');
+
+			await meta.configs.set('profanityAction', 'filter');
+			result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result.action, 'filter');
+			assert(result.filteredContent.includes('***'));
+		});
+
+		it('should handle empty or invalid profanity action gracefully', async () => {
+			await meta.configs.set('profanityAction', 'invalid');
+			const result = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result.action, 'invalid');
+
+			await meta.configs.set('profanityAction', '');
+			const result2 = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			assert.strictEqual(result2.action, 'block');
+		});
+
+		it('should maintain setting consistency across API calls', async () => {
+			await meta.configs.set('profanityAction', 'filter');
+
+			const result1 = await api.posts.checkProfanity({ uid: testUid }, { content: 'This is a damn test' });
+			const result2 = await api.posts.checkProfanity({ uid: testUid }, { content: 'Another shit test' });
+
+			assert.strictEqual(result1.action, 'filter');
+			assert.strictEqual(result2.action, 'filter');
+			assert(result1.filteredContent.includes('***'));
+			assert(result2.filteredContent.includes('***'));
 		});
 	});
 });
