@@ -1,0 +1,51 @@
+post:
+  tags:
+    - posts
+  summary: Check content for profanity
+  description: Checks if the provided content contains profanity according to the configured profanity filter
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - content
+          properties:
+            content:
+              type: string
+              description: The text content to check for profanity
+              example: This is some text to check
+  responses:
+    '200':
+      description: Profanity check completed successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties:
+                  hasProfanity:
+                    type: boolean
+                    description: Whether profanity was detected in the content
+                  action:
+                    type: string
+                    description: The configured action for profanity (e.g., "block", "censor")
+                  foundWords:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of profane words found in the content
+                  filteredContent:
+                    type: string
+                    description: The content with profanity filtered/censored
+    '400':
+      description: Bad request - missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: ../../../components/schemas/Error.yaml#/Error
