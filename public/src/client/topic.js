@@ -17,6 +17,7 @@ define('forum/topic', [
 	'alerts',
 	'bootbox',
 	'clipboard',
+	////'forum/topic/reactions',
 ], function (
 	infinitescroll, threadTools, postTools,
 	events, posts, navigator, sort, quickreply,
@@ -55,6 +56,9 @@ define('forum/topic', [
 		threadTools.init(tid, $('.topic'));
 		events.init();
 
+		initReactions();
+
+
 		sort.handleSort('topicPostSort', 'topic/' + ajaxify.data.slug);
 
 		if (!config.usePagination) {
@@ -76,6 +80,98 @@ define('forum/topic', [
 
 		hooks.fire('action:topic.loaded', ajaxify.data);
 	};
+
+	// Reactions functionality - inline
+	function initReactions() {
+		console.log('🎉 Initializing reactions');
+		
+		// Remove any existing handlers
+		$(document).off('click', '.reaction-btn');
+		
+		// Handle reaction button clicks
+		$(document).on('click', '.reaction-btn', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			console.log('👆 Reaction button clicked!');
+			
+			const btn = $(this);
+			const emoji = btn.data('emoji');
+			const reactionContainer = btn.closest('[data-component="post/reactions"]');
+			const pid = reactionContainer.data('pid');
+			
+			console.log('Data:', { emoji: emoji, pid: pid });
+			
+			if (!emoji || !pid) {
+				console.error('❌ Missing emoji or pid');
+				return;
+			}
+			
+			if (btn.prop('disabled')) {
+				return;
+			}
+			btn.prop('disabled', true);
+			
+			if (typeof socket === 'undefined') {
+				console.error('❌ Socket not available');
+				btn.prop('disabled', false);
+				return;
+			}
+			
+			console.log('📤 Emitting socket event');
+			
+			socket.emit('plugins.reactions.toggle', { pid: pid, emoji: emoji }, function (err, data) {
+				btn.prop('disabled', false);
+				
+				if (err) {
+					console.error('❌ Error:', err);
+					alerts.error(err.message || 'Failed to toggle reaction');
+					return;
+				}
+				
+				console.log('✅ Response:', data);
+				
+				if (data && data.counts) {
+					updateReactionUI(pid, data.counts, emoji);
+				}
+			});
+		});
+	}
+	
+	function updateReactionUI(pid, counts, toggledEmoji) {
+		console.log('🔄 Updating UI:', { pid: pid, counts: counts });
+		
+		const reactionContainer = $('[data-component="post/reactions"][data-pid="' + pid + '"]');
+		
+		if (!reactionContainer.length) {
+			console.warn('⚠️ Container not found');
+			return;
+		}
+		
+		reactionContainer.find('.reaction-btn').each(function () {
+			const btn = $(this);
+			const emoji = btn.data('emoji');
+			const countSpan = btn.find('.reaction-count');
+			const count = counts[emoji] || 0;
+			
+			if (count > 0) {
+				countSpan.text(count).removeClass('hidden');
+			} else {
+				countSpan.text('0').addClass('hidden');
+			}
+			
+			if (emoji === toggledEmoji) {
+				const isPressed = btn.attr('aria-pressed') === 'true';
+				btn.attr('aria-pressed', !isPressed);
+				
+				if (!isPressed) {
+					btn.addClass('active');
+				} else {
+					btn.removeClass('active');
+				}
+			}
+		});
+	}
 
 	function handleTopicSearch() {
 		require(['mousetrap'], (mousetrap) => {
