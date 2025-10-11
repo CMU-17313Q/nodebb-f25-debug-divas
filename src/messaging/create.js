@@ -7,6 +7,7 @@ const plugins = require('../plugins');
 const db = require('../database');
 const user = require('../user');
 const utils = require('../utils');
+const profanityFilter = require('../profanity/filter');
 
 module.exports = function (Messaging) {
 	Messaging.sendMessage = async (data) => {
@@ -52,9 +53,13 @@ module.exports = function (Messaging) {
 		}
 		const mid = data.mid || await db.incrObjectField('global', 'nextMid');
 		const timestamp = data.timestamp || Date.now();
+
+		// Apply profanity filter to chat messages
+		const filteredContent = profanityFilter.clean(String(data.content));
+
 		let message = {
 			mid: mid,
-			content: String(data.content),
+			content: filteredContent,
 			timestamp: timestamp,
 			fromuid: uid,
 			roomId: roomId,

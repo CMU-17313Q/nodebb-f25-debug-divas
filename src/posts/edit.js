@@ -13,6 +13,7 @@ const pubsub = require('../pubsub');
 const utils = require('../utils');
 const slugify = require('../slugify');
 const translator = require('../translator');
+const profanityFilter = require('../profanity/filter');
 
 module.exports = function (Posts) {
 	pubsub.on('post:edit', pid => Posts.clearCachedPost(pid));
@@ -35,6 +36,10 @@ module.exports = function (Posts) {
 		await scheduledTopicCheck(data, topicData);
 
 		data.content = data.content === null ? postData.content : data.content;
+		// Apply profanity filter
+		if (data.content) {
+			data.content = profanityFilter.clean(data.content);
+		}
 		const oldContent = postData.sourceContent || postData.content; // for diffing purposes
 		const editPostData = getEditPostData(data, topicData, postData);
 

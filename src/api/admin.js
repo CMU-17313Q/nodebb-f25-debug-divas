@@ -4,6 +4,7 @@ const meta = require('../meta');
 const analytics = require('../analytics');
 const privileges = require('../privileges');
 const groups = require('../groups');
+const profanityFilter = require('../profanity/filter');
 
 const adminApi = module.exports;
 
@@ -42,4 +43,42 @@ adminApi.listGroups = async () => {
 
 	const payload = await groups.getNonPrivilegeGroups('groups:createtime', 0, -1, { ephemeral: false });
 	return { groups: payload };
+};
+
+adminApi.getBannedWords = async (caller) => {
+	const isAdmin = await privileges.users.isAdministrator(caller.uid);
+	if (!isAdmin) {
+		throw new Error('[[error:no-privileges]]');
+	}
+
+	const words = profanityFilter.getWords();
+	return { words };
+};
+
+adminApi.addBannedWord = async (caller, { word }) => {
+	const isAdmin = await privileges.users.isAdministrator(caller.uid);
+	if (!isAdmin) {
+		throw new Error('[[error:no-privileges]]');
+	}
+
+	if (!word || typeof word !== 'string') {
+		throw new Error('[[error:invalid-data]]');
+	}
+
+	profanityFilter.addWord(word);
+	return { success: true };
+};
+
+adminApi.removeBannedWord = async (caller, { word }) => {
+	const isAdmin = await privileges.users.isAdministrator(caller.uid);
+	if (!isAdmin) {
+		throw new Error('[[error:no-privileges]]');
+	}
+
+	if (!word || typeof word !== 'string') {
+		throw new Error('[[error:invalid-data]]');
+	}
+
+	profanityFilter.removeWord(word);
+	return { success: true };
 };

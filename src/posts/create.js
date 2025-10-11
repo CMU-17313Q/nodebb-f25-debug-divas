@@ -10,12 +10,16 @@ const groups = require('../groups');
 const privileges = require('../privileges');
 const activitypub = require('../activitypub');
 const utils = require('../utils');
+const profanityFilter = require('../profanity/filter');
 
 module.exports = function (Posts) {
 	Posts.create = async function (data) {
 		// This is an internal method, consider using Topics.reply instead
 		const { uid, tid, _activitypub, sourceContent } = data;
-		const content = data.content.toString();
+		let content = data.content.toString();
+		// Apply profanity filter
+		content = profanityFilter.clean(content);
+		data.content = content;
 		const timestamp = data.timestamp || Date.now();
 		const isMain = data.isMain || false;
 
