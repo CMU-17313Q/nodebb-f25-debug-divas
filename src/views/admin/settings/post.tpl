@@ -124,23 +124,23 @@
 
 			<!-- profanity settings -->
 			<div id="profanity" class="mb-4">
-				<h5 class="fw-bold tracking-tight settings-header">Profanity Filter</h5>
+				<h5 class="fw-bold tracking-tight settings-header">Profanity Filter (Posts & Chats)</h5>
 
 				<div class="mb-3">
-					<label class="form-label">How should profanity be handled?</label>
+					<label class="form-label">How should profanity be handled in posts and chat messages?</label>
 					<div class="form-check">
 						<input class="form-check-input" type="radio" name="profanityAction" id="profanityBlock" value="block" data-field="profanityAction" checked>
 						<label class="form-check-label" for="profanityBlock">
-							Block posts containing profanity
+							Block content containing profanity
 						</label>
-						<p class="form-text">Users cannot post content with profanity and will see an error message.</p>
+						<p class="form-text">Users cannot post or send messages with profanity and will see an error message.</p>
 					</div>
 					<div class="form-check">
 						<input class="form-check-input" type="radio" name="profanityAction" id="profanityFilter" value="filter" data-field="profanityAction">
 						<label class="form-check-label" for="profanityFilter">
 							Filter profanity with asterisks
 						</label>
-						<p class="form-text">Posts with profanity will be automatically censored (e.g., "s***").</p>
+						<p class="form-text">Posts and chat messages with profanity will be automatically censored (e.g., "d***").</p>
 					</div>
 				</div>
 			</div>

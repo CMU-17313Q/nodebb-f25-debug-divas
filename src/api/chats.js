@@ -126,13 +126,20 @@ chatsAPI.post = async (caller, data) => {
 		throw new Error('[[error:too-many-messages]]');
 	}
 
-	// Apply profanity filter
-	const filteredMessage = profanityFilter.clean(data.message);
+	// Apply profanity filter based on admin setting
+	const profanityAction = meta.config.profanityAction || 'block';
+	let messageContent = data.message;
+
+	if (profanityAction === 'block' && profanityFilter.isProfane(messageContent)) {
+		throw new Error('[[error:profanity-detected]]');
+	} else if (profanityAction === 'filter') {
+		messageContent = profanityFilter.clean(messageContent);
+	}
 
 	const message = await messaging.addMessage({
 		uid: caller.uid,
 		roomId: data.roomId,
-		content: filteredMessage,
+		content: messageContent,
 		toMid: data.toMid,
 		timestamp: Date.now(),
 		ip: caller.ip,
@@ -408,9 +415,18 @@ chatsAPI.getIpAddress = async (caller, { mid }) => {
 chatsAPI.editMessage = async (caller, { mid, roomId, message }) => {
 	await messaging.canEdit(mid, caller.uid);
 	await messaging.checkContent(message);
-	// Apply profanity filter
-	const filteredMessage = profanityFilter.clean(message);
-	await messaging.editMessage(caller.uid, mid, roomId, filteredMessage);
+
+	// Apply profanity filter based on admin setting
+	const profanityAction = meta.config.profanityAction || 'block';
+	let messageContent = message;
+
+	if (profanityAction === 'block' && profanityFilter.isProfane(messageContent)) {
+		throw new Error('[[error:profanity-detected]]');
+	} else if (profanityAction === 'filter') {
+		messageContent = profanityFilter.clean(messageContent);
+	}
+
+	await messaging.editMessage(caller.uid, mid, roomId, messageContent);
 };
 
 chatsAPI.deleteMessage = async (caller, { mid }) => {

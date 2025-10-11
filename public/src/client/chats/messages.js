@@ -3,9 +3,9 @@
 
 define('forum/chats/messages', [
 	'components', 'hooks', 'bootbox', 'alerts',
-	'messages', 'api', 'forum/topic/images', 'imagesloaded',
+	'messages', 'api', 'forum/topic/images', 'imagesloaded', 'profanity',
 ], function (
-	components, hooks, bootbox, alerts, messagesModule, api, images, imagesLoaded
+	components, hooks, bootbox, alerts, messagesModule, api, images, imagesLoaded, profanity
 ) {
 	const messages = {};
 
@@ -14,6 +14,22 @@ define('forum/chats/messages', [
 		if (!message.trim().length) {
 			return;
 		}
+
+		// Check for profanity
+		try {
+			const result = await profanity.check(message);
+			if (result.hasProfanity && result.action === 'block') {
+				profanity.showAlert('block');
+				return;
+			}
+			if (result.hasProfanity && result.action === 'filter') {
+				message = result.filteredContent;
+			}
+		} catch (err) {
+			console.error('Profanity check failed:', err);
+			// Continue sending if profanity check fails
+		}
+
 		const chatContent = inputEl.parents(`[component="chat/messages"][data-roomid="${roomId}"]`);
 		inputEl.val('').trigger('input');
 
@@ -241,11 +257,27 @@ define('forum/chats/messages', [
 		});
 		editEl.find('[data-action="cancel"]').on('click', finishEdit);
 
-		editEl.find('[data-action="save"]').on('click', function () {
-			const message = textarea.val();
+		editEl.find('[data-action="save"]').on('click', async function () {
+			let message = textarea.val();
 			if (!message.trim().length) {
 				return;
 			}
+
+			// Check for profanity
+			try {
+				const result = await profanity.check(message);
+				if (result.hasProfanity && result.action === 'block') {
+					profanity.showAlert('block');
+					return;
+				}
+				if (result.hasProfanity && result.action === 'filter') {
+					message = result.filteredContent;
+				}
+			} catch (err) {
+				console.error('Profanity check failed:', err);
+				// Continue sending if profanity check fails
+			}
+
 			api.put(`/chats/${roomId}/messages/${mid}`, { message }).then(() => {
 				finishEdit();
 				hooks.fire('action:chat.edited', { roomId, message, mid });
