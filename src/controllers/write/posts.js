@@ -210,3 +210,8 @@ Posts.notifyQueuedPostOwner = async (req, res) => {
 	await api.posts.notifyQueuedPostOwner(req, { id, message: req.body.message });
 	helpers.formatApiResponse(200, res);
 };
+
+Posts.checkProfanity = async (req, res) => {
+	const result = await api.posts.checkProfanity(req, { content: req.body.content });
+	helpers.formatApiResponse(200, res, result);
+};

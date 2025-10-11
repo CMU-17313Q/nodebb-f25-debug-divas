@@ -46,7 +46,7 @@ helpers.setupAdminPageRoute = function (...args) {
 		winston.warn(`[helpers.setupAdminPageRoute(${name})] passing \`middleware\` as the third param is deprecated, it can now be safely removed`);
 	}
 	router.get(name, middleware.autoLocale, middleware.admin.buildHeader, middlewares, helpers.tryRoute(controller));
-	router.get(`/api${name}`, middlewares, helpers.tryRoute(controller));
+	router.get(`/api${name}`, middleware.prepareAPI, middlewares, helpers.tryRoute(controller));
 };
 
 // router, verb, name, middlewares(optional), controller

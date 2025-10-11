@@ -260,6 +260,8 @@ paths:
     $ref: 'write/admin/analytics.yaml'
   /admin/analytics/{set}:
     $ref: 'write/admin/analytics/set.yaml'
+  /admin/banned-words:
+    $ref: 'write/admin/banned-words.yaml'
   /admin/tokens:
     $ref: 'write/admin/tokens.yaml'
   /admin/tokens/{token}:

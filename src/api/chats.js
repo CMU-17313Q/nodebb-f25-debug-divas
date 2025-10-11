@@ -11,6 +11,7 @@ const notifications = require('../notifications');
 const privileges = require('../privileges');
 const plugins = require('../plugins');
 const utils = require('../utils');
+const profanityFilter = require('../profanity/filter');
 
 const websockets = require('../socket.io');
 const socketHelpers = require('../socket.io/helpers');
@@ -125,10 +126,13 @@ chatsAPI.post = async (caller, data) => {
 		throw new Error('[[error:too-many-messages]]');
 	}
 
+	// Apply profanity filter
+	const filteredMessage = profanityFilter.clean(data.message);
+
 	const message = await messaging.addMessage({
 		uid: caller.uid,
 		roomId: data.roomId,
-		content: data.message,
+		content: filteredMessage,
 		toMid: data.toMid,
 		timestamp: Date.now(),
 		ip: caller.ip,
@@ -403,7 +407,10 @@ chatsAPI.getIpAddress = async (caller, { mid }) => {
 
 chatsAPI.editMessage = async (caller, { mid, roomId, message }) => {
 	await messaging.canEdit(mid, caller.uid);
-	await messaging.editMessage(caller.uid, mid, roomId, message);
+	await messaging.checkContent(message);
+	// Apply profanity filter
+	const filteredMessage = profanityFilter.clean(message);
+	await messaging.editMessage(caller.uid, mid, roomId, filteredMessage);
 };
 
 chatsAPI.deleteMessage = async (caller, { mid }) => {

@@ -86,10 +86,10 @@ define('forum/topic', [
 		console.log('🎉 Initializing reactions');
 		
 		// Remove any existing handlers
-		$(document).off('click', '.reaction-btn');
+		$(document).off('click.reactions', '.reaction-btn');
 		
 		// Handle reaction button clicks
-		$(document).on('click', '.reaction-btn', function (e) {
+		$(document).on('click.reactions', '.reaction-btn', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 			

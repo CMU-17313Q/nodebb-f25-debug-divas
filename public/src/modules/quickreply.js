@@ -2,10 +2,10 @@
 
 define('quickreply', [
 	'components', 'autocomplete', 'api',
-	'alerts', 'uploadHelpers', 'mousetrap', 'storage', 'hooks',
+	'alerts', 'uploadHelpers', 'mousetrap', 'storage', 'hooks', 'profanity',
 ], function (
 	components, autocomplete, api,
-	alerts, uploadHelpers, mousetrap, storage, hooks
+	alerts, uploadHelpers, mousetrap, storage, hooks, profanity
 ) {
 	const QuickReply = {
 		_autocomplete: null,
@@ -74,27 +74,44 @@ define('quickreply', [
 			}
 
 			ready = false;
-			api.post(`/topics/${ajaxify.data.tid}`, replyData, function (err, data) {
-				ready = true;
-				if (err) {
-					return alerts.error(err);
-				}
-				if (data && data.queued) {
-					alerts.alert({
-						type: 'success',
-						title: '[[global:alert.success]]',
-						message: data.message,
-						timeout: 10000,
-						clickfn: function () {
-							ajaxify.go(`/post-queue/${data.id}`);
-						},
-					});
+
+			profanity.check(replyMsg).then(function (result) {
+				if (result.hasProfanity && result.action === 'block') {
+					ready = true;
+					profanity.showAlert(result.action);
+					return;
 				}
 
-				components.get('topic/quickreply/text').val('');
-				storage.removeItem(qrDraftId);
-				QuickReply._autocomplete.hide();
-				hooks.fire('action:quickreply.success', { data });
+				if (result.hasProfanity && result.action === 'filter') {
+					replyData.content = result.filteredContent;
+				}
+
+				api.post(`/topics/${ajaxify.data.tid}`, replyData, function (err, data) {
+					ready = true;
+					if (err) {
+						return alerts.error(err);
+					}
+					if (data && data.queued) {
+						alerts.alert({
+							type: 'success',
+							title: '[[global:alert.success]]',
+							message: data.message,
+							timeout: 10000,
+							clickfn: function () {
+								ajaxify.go(`/post-queue/${data.id}`);
+							},
+						});
+					}
+
+					components.get('topic/quickreply/text').val('');
+					storage.removeItem(qrDraftId);
+					QuickReply._autocomplete.hide();
+					hooks.fire('action:quickreply.success', { data });
+				});
+			}).catch(function (err) {
+				ready = true;
+				console.error('Profanity check failed:', err);
+				alerts.error('Unable to verify content. Please try again.');
 			});
 		});
 

@@ -1,0 +1,101 @@
+get:
+  tags:
+    - admin
+  summary: Get list of banned words
+  description: Retrieves the current list of profanity-filtered words
+  responses:
+    '200':
+      description: Successfully retrieved banned words list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties:
+                  words:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of banned/filtered words
+post:
+  tags:
+    - admin
+  summary: Add a banned word
+  description: Adds a word to the profanity filter list
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - word
+          properties:
+            word:
+              type: string
+              description: The word to ban
+              example: badword
+  responses:
+    '200':
+      description: Successfully added banned word
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    '400':
+      description: Bad request - missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/Error.yaml#/Error
+delete:
+  tags:
+    - admin
+  summary: Remove a banned word
+  description: Removes a word from the profanity filter list
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - word
+          properties:
+            word:
+              type: string
+              description: The word to remove from the ban list
+              example: badword
+  responses:
+    '200':
+      description: Successfully removed banned word
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    '400':
+      description: Bad request - missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/Error.yaml#/Error
