@@ -1,9 +1,9 @@
 services:
   nodebb:
     user: "0"
-    build:
+    build: 
       context: .
-      dockerfile: dev.Dockerfile
+      dockerfile: dev.Dockerfile   
     # image: ghcr.io/nodebb/nodebb:latest
     restart: unless-stopped
     ports:
@@ -13,23 +13,20 @@ services:
       - nodebb-uploads:/usr/src/app/public/uploads
       - nodebb-config:/opt/config
       - ./install/docker/setup.json:/usr/src/app/setup.json
-    networks:
-      - nodebb_network
 
-  mongo:
-    image: 'mongo:7-jammy'
-    restart: unless-stopped
-    ports:
-      - '27017:27017'
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: nodebb
-      MONGO_INITDB_ROOT_PASSWORD: nodebb
-      MONGO_INITDB_DATABASE: nodebb
-    volumes:
-      - mongo-data:/data/db
-      - ./install/docker/mongodb-user-init.js:/docker-entrypoint-initdb.d/user-init.js
-    networks:
-      - nodebb_network
+ # Not 
+  # mongo:
+  #   image: 'mongo:7-jammy'
+  #   restart: unless-stopped
+  #   ports:
+  #     - '27017:27017'
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: nodebb
+  #     MONGO_INITDB_ROOT_PASSWORD: nodebb
+  #     MONGO_INITDB_DATABASE: nodebb
+  #   volumes:
+  #     - mongo-data:/data/db
+  #     - ./install/docker/mongodb-user-init.js:/docker-entrypoint-initdb.d/user-init.js
   redis:
     image: redis:8.0.1-alpine
     restart: unless-stopped
@@ -39,8 +36,6 @@ services:
       - redis-data:/data
     profiles:
       - redis
-    networks:
-      - nodebb_network
 
   postgres:
     image: postgres:17.5-alpine
@@ -53,8 +48,6 @@ services:
       - postgres-data:/var/lib/postgresql/data
     profiles:
       - postgres
-    networks:
-      - nodebb_network
 
 volumes:
   mongo-data:
@@ -69,7 +62,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ./.docker/database/redis
+      device: ${PWD}/.docker/database/redis
 
   postgres-data:
     driver: local
@@ -98,7 +91,3 @@ volumes:
       o: bind
       type: none
       device: ./.docker/config
-networks:
-  nodebb_network:
-    name: nodebb_network
-    driver: bridge
