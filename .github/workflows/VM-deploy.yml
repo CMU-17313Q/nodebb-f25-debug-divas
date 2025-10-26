@@ -44,3 +44,4 @@ jobs:
 #testing vm deploy
 
 # testing VM Deploy
+# Test that the docker down works
