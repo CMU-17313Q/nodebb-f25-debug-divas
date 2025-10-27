@@ -2,12 +2,13 @@
 
 
 # Features
-- ## [Favorites Feature](#First Feature: Favorites Feature)
-- ## [Emoji Reactions Feature](#Second Feature: Emoji Reactions Feature)
-- ## [Profanity Filtering Featuree](#Third Feature: Profanity Filtering Feature)
+- ## [Favorites Feature](#First Feature---Favorites Feature)
+- ## [Emoji Reactions Feature](#Second Feature---Emoji Reactions Feature)
+- ## [Profanity Filtering Featuree](#Third Feature---Profanity Filtering Feature)
 - ## [Reading Time Feature](#Fourth Feature: Reading Time Feature)
 
-#First Feature: Favorites Feature
+---
+# First Feature - Favorites Feature
   **Feature Overview**
 
     The Favorites feature allows students to mark announcements as favorites, so they can easily view or return to important announcements later.
@@ -84,7 +85,7 @@
 
 
 
- #Second Feature: Emoji Reactions Feature
+# Second Feature - Emoji Reactions Feature
     **Feature Overview**
       The Emoji Reactions feature allows users to react to forum posts with emojis such as 😂, 🎉, 😢, 😡, 👏, and 👀.
       Each emoji works as a toggle — clicking once adds a reaction, and clicking again removes it.
@@ -162,7 +163,7 @@
     const ALLOWED_REACTIONS = ['👍', '😂', '🎉', '🔥', '💯'];
     Restart NodeBB after making changes for them to appear.
 
-#Third Feature: Profanity Filtering Feature
+# Third Feature - Profanity Filtering Feature
   **Feature Overview**
     The Profanity Filtering system automatically detects and handles inappropriate language
     in posts and chat messages. Administrators can choose between two modes: Block Mode
@@ -284,7 +285,7 @@
     Restart NodeBB after modifying core filter settings for changes to take effect.
 
 
-#Fourth Feature: Reading Time Feature
+# Fourth Feature - Reading Time Feature
   **Feature Overview**
 
     The Reading Time feature automatically calculates how long it would take to read a post or reply in NodeBB.
