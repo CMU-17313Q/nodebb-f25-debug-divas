@@ -1,4 +1,4 @@
-**User Guide:**
+# User Guide:
 
 **First Feature: Favorites Feature**
   **Feature Overview**
