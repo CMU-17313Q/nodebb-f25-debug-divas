@@ -1,0 +1,21 @@
+name: StandardJS
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  standard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      # install tool locally for CI without persisting to package.json
+      - run: npm i -D standard
+      # Scope to your real code to avoid vendor noise; tweak if needed
+      - run: npx standard "src/**/*.js" "lib/**/*.js" "*.js" "nodebb/**/*.js" || true
