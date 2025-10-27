@@ -2,11 +2,11 @@
 
 
 # Features
-- ## [Favorites Feature](#First Feature---Favorites Feature)
-- ## [Emoji Reactions Feature](#Second Feature---Emoji Reactions Feature)
-- ## [Profanity Filtering Featuree](#Third Feature---Profanity Filtering Feature)
-- ## [Reading Time Feature](#Fourth Feature: Reading Time Feature)
-
+- [Favorites Feature](#first-feature---favorites-feature)
+- [Emoji Reactions Feature](#second-feature---emoji-reactions-feature)
+- [Profanity Filtering Feature](#third-feature---profanity-filtering-feature)
+- [Reading Time Feature](#fourth-feature---reading-time-feature)
+  
 ---
 # First Feature - Favorites Feature
   **Feature Overview**
