@@ -1,0 +1,56 @@
+
+Testing /workspaces/nodebb-f25-debug-divas...
+
+Tested 829 dependencies for known issues, found 10 issues, 14 vulnerable paths.
+
+
+Issues to fix by upgrading:
+
+  Upgrade nodemailer@7.0.3 to nodemailer@7.0.7 to fix
+  ✗ Interpretation Conflict (new) [Medium Severity][https://security.snyk.io/vuln/SNYK-JS-NODEMAILER-13378253] in nodemailer@7.0.3
+    introduced by nodemailer@7.0.3
+
+  Upgrade validator@13.15.0 to validator@13.15.20 to fix
+  ✗ Improper Validation of Specified Type of Input (new) [Medium Severity][https://security.snyk.io/vuln/SNYK-JS-VALIDATOR-13395830] in validator@13.15.0
+    introduced by validator@13.15.0 and 4 other path(s)
+
+
+Issues with no direct upgrade or patch:
+  ✗ Cross-site Scripting (XSS) [Medium Severity][https://security.snyk.io/vuln/SNYK-JS-BOOTBOX-174704] in bootbox@6.0.3
+    introduced by bootbox@6.0.3
+  No upgrade or patch available
+  ✗ Improper Verification of Cryptographic Signature [Critical Severity][https://security.snyk.io/vuln/SNYK-JS-ELLIPTIC-8187303] in elliptic@6.6.1
+    introduced by nodebb-plugin-2factor@7.5.10 > fido2-lib@2.8.3 > jwk-to-pem@2.0.7 > elliptic@6.6.1
+  No upgrade or patch available
+  ✗ Cross-site Scripting (XSS) [Critical Severity][https://security.snyk.io/vuln/SNYK-JS-JQUERYFORM-574783] in jquery-form@4.3.0
+    introduced by jquery-form@4.3.0
+  No upgrade or patch available
+  ✗ Uncaught Exception [High Severity][https://security.snyk.io/vuln/SNYK-JS-MULTER-10185673] in multer@1.4.5-lts.2
+    introduced by nodebb-plugin-emoji@6.0.2 > multer@1.4.5-lts.2
+  This issue was fixed in versions: 2.0.0
+  ✗ Missing Release of Memory after Effective Lifetime [High Severity][https://security.snyk.io/vuln/SNYK-JS-MULTER-10185675] in multer@1.4.5-lts.2
+    introduced by nodebb-plugin-emoji@6.0.2 > multer@1.4.5-lts.2
+  This issue was fixed in versions: 2.0.0
+  ✗ Uncaught Exception [Critical Severity][https://security.snyk.io/vuln/SNYK-JS-MULTER-10299078] in multer@1.4.5-lts.2
+    introduced by nodebb-plugin-emoji@6.0.2 > multer@1.4.5-lts.2
+  This issue was fixed in versions: 2.0.1
+  ✗ Uncaught Exception [High Severity][https://security.snyk.io/vuln/SNYK-JS-MULTER-10773732] in multer@1.4.5-lts.2
+    introduced by nodebb-plugin-emoji@6.0.2 > multer@1.4.5-lts.2
+  This issue was fixed in versions: 2.0.2
+  ✗ Regular Expression Denial of Service (ReDoS) [Medium Severity][https://security.snyk.io/vuln/SNYK-JS-ZXCVBN-3257741] in zxcvbn@4.4.2
+    introduced by zxcvbn@4.4.2
+  No upgrade or patch available
+
+
+
+Organization:      mhmansoo
+Package manager:   npm
+Target file:       package-lock.json
+Project name:      nodebb
+Open source:       no
+Project path:      /workspaces/nodebb-f25-debug-divas
+Licenses:          enabled
+
+Tip: Detected multiple supported manifests (2), use --all-projects to scan all of them at once.
+
+
