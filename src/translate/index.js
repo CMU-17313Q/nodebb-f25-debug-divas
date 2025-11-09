@@ -4,6 +4,7 @@
 
 const translatorApi = module.exports;
 
+// eslint-disable-next-line no-unused-vars
 translatorApi.translate = function (postData) {
 	// Default: assume posts are in English, no translation needed
 	return [true, ''];
