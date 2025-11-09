@@ -5,7 +5,8 @@
 const translatorApi = module.exports;
 
 translatorApi.translate = function (postData) {
-	return ['is_english',postData];
+	// Default: assume posts are in English, no translation needed
+	return [true, ''];
 };
 
 // translatorApi.translate = async function (postData) {
