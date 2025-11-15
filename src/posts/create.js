@@ -10,18 +10,16 @@ const groups = require('../groups');
 const privileges = require('../privileges');
 const activitypub = require('../activitypub');
 const utils = require('../utils');
-const profanityFilter = require('../profanity/filter');
+const translate = require('../translate');
 
 module.exports = function (Posts) {
 	Posts.create = async function (data) {
 		// This is an internal method, consider using Topics.reply instead
 		const { uid, tid, _activitypub, sourceContent } = data;
-		let content = data.content.toString();
-		// Apply profanity filter
-		content = profanityFilter.clean(content);
-		data.content = content;
+		const content = data.content.toString();
 		const timestamp = data.timestamp || Date.now();
 		const isMain = data.isMain || false;
+		const [isEnglish, translatedContent] = await translate.translate(data);
 
 		if (!uid && parseInt(uid, 10) !== 0) {
 			throw new Error('[[error:invalid-uid]]');
@@ -32,7 +30,7 @@ module.exports = function (Posts) {
 		}
 
 		const pid = data.pid || await db.incrObjectField('global', 'nextPid');
-		let postData = { pid, uid, tid, content, sourceContent, timestamp };
+		let postData = { pid, uid, tid, content, sourceContent, timestamp, isEnglish, translatedContent };
 
 		if (data.toPid) {
 			postData.toPid = data.toPid;

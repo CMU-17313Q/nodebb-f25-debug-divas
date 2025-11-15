@@ -5,11 +5,9 @@
 	{{{ end }}}
 </div>
 {{{ end }}}
-
 {{{ if (./parent && !hideParent) }}}
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
-
 <div class="d-flex align-items-start gap-3 post-container-parent">
 	<div class="bg-body d-none d-sm-block rounded-circle" style="outline: 2px solid var(--bs-body-bg);">
 		<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
@@ -24,7 +22,6 @@
 			{{{ end }}}
 		</a>
 	</div>
-
 	<div class="post-container d-flex gap-2 flex-grow-1 flex-column w-100" style="min-width:0;">
 		<div class="d-flex align-items-start justify-content-between gap-1 flex-nowrap w-100 post-header" itemprop="author" itemscope itemtype="https://schema.org/Person">
 			<div class="d-flex gap-1 flex-wrap align-items-center text-truncate">
@@ -77,7 +74,6 @@
 				</div>
 				{{{ end }}}
 			</div>
-
 			<div class="d-flex align-items-center gap-1 justify-content-end">
 				<span class="bookmarked opacity-0 text-primary"><i class="fa fa-bookmark-o"></i></span>
 				<a href="{config.relative_path}/post/{encodeURIComponent(./pid)}" class="post-index text-muted d-none d-md-inline">#{increment(./index, "1")}</a>
@@ -85,7 +81,15 @@
 		</div>
 
 		<div class="content text-break" component="post/content" itemprop="text">
-			{posts.content}
+			{posts.content}			
+			{{{if !posts.isEnglish }}}
+		        <div class="sensitive-content-message">
+		        <a class="btn btn-sm btn-primary view-translated-btn">Click here to view the translated message.</a>
+		        </div>
+		        <div class="translated-content" style="display:none;">
+		        {posts.translatedContent}
+		        </div>
+	        {{{end}}}
 		</div>
 
 		<div component="post/footer" class="post-footer border-bottom pb-2">
@@ -111,128 +115,8 @@
 					<i class="fa fa-fw fa-chevron-down" component="post/replies/open"></i>
 				</a>
 				{{{ end }}}
-
 				<div component="post/actions" class="d-flex flex-grow-1 align-items-center justify-content-end gap-1 post-tools">
-
-					<!-- Reactions -->
-				<div class="post-reactions d-flex gap-1 mt-2"
-					data-component="post/reactions"
-					data-pid="{./pid}">
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="👍" aria-pressed="false">
-						<span class="reaction-emoji">👍</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="😂" aria-pressed="false">
-						<span class="reaction-emoji">😂</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="🎉" aria-pressed="false">
-						<span class="reaction-emoji">🎉</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="😢" aria-pressed="false">
-						<span class="reaction-emoji">😢</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="😡" aria-pressed="false">
-						<span class="reaction-emoji">😡</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="👏" aria-pressed="false">
-						<span class="reaction-emoji">👏</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="🙌" aria-pressed="false">
-						<span class="reaction-emoji">🙌</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-
-					<button class="reaction-btn btn btn-sm btn-ghost" type="button" data-emoji="👀" aria-pressed="false">
-						<span class="reaction-emoji">👀</span>
-						<span class="reaction-count hidden">0</span>
-					</button>
-				</div>
-				<!-- /Reactions -->
-
-				<script>
-				(function() {
-					console.log('🔧 Inline reactions script loaded');
-					
-					$(document).ready(function() {
-						console.log('📄 Document ready');
-						
-						$('body').off('click.reactions').on('click.reactions', '.reaction-btn', function(e) {
-							e.preventDefault();
-							e.stopPropagation();
-							
-							console.log('🎯 REACTION CLICKED!');
-							
-							var btn = $(this);
-							var emoji = btn.attr('data-emoji');
-							var container = btn.closest('[data-component="post/reactions"]');
-							var pid = container.attr('data-pid');
-							
-							console.log('Emoji:', emoji);
-							console.log('PID:', pid);
-							console.log('Socket available:', typeof socket !== 'undefined');
-							
-							if (!emoji || !pid) {
-								console.error('Missing data!');
-								return;
-							}
-							
-							if (typeof socket === 'undefined') {
-								console.error('Socket not available!');
-								alert('Socket not available. Are you logged in?');
-								return;
-							}
-							
-							btn.prop('disabled', true);
-							
-							socket.emit('plugins.reactions.toggle', { pid: pid, emoji: emoji }, function(err, data) {
-								btn.prop('disabled', false);
-								
-								if (err) {
-									console.error('Error:', err);
-									alert('Error: ' + (err.message || err));
-									return;
-								}
-								
-								console.log('✅ Success!', data);
-								
-								if (data && data.counts) {
-									container.find('.reaction-btn').each(function() {
-										var btnEmoji = $(this).attr('data-emoji');
-										var count = data.counts[btnEmoji] || 0;
-										var countSpan = $(this).find('.reaction-count');
-										
-										if (count > 0) {
-											countSpan.text(count).removeClass('hidden');
-										} else {
-											countSpan.addClass('hidden');
-										}
-										
-										if (btnEmoji === emoji) {
-											var isPressed = $(this).attr('aria-pressed') === 'true';
-											$(this).attr('aria-pressed', !isPressed);
-											$(this).toggleClass('active');
-										}
-									});
-								}
-							});
-						});
-						
-						console.log('✅ Reaction handlers attached');
-					});
-				})();
-				</script>
-
+					<!-- IMPORT partials/topic/reactions.tpl -->
 					<a component="post/reply" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:reply]]"><i class="fa fa-fw fa-reply text-primary"></i></a>
 					<a component="post/quote" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:quote]]"><i class="fa fa-fw fa-quote-right text-primary"></i></a>
 
