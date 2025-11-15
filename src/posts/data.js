@@ -3,8 +3,6 @@
 const db = require('../database');
 const plugins = require('../plugins');
 const utils = require('../utils');
-const Reactions = require('../plugins/reactions'); // 👈 Add this line
-
 
 const intFields = [
 	'uid', 'pid', 'tid', 'deleted', 'timestamp',
@@ -13,28 +11,20 @@ const intFields = [
 ];
 
 module.exports = function (Posts) {
-	//changed this also. 
 	Posts.getPostsFields = async function (pids, fields) {
 		if (!Array.isArray(pids) || !pids.length) {
 			return [];
 		}
-
 		const keys = pids.map(pid => `post:${pid}`);
 		const postData = await db.getObjects(keys, fields);
-
 		const result = await plugins.hooks.fire('filter:post.getFields', {
 			pids: pids,
 			posts: postData,
 			fields: fields,
 		});
-
-		//  Now: await modifyPost() with reactions (async)
-		await Promise.all(result.posts.map(post => modifyPost(post, fields)));
-
+		result.posts.forEach(post => modifyPost(post, fields));
 		return result.posts;
 	};
-
-
 
 	Posts.getPostData = async function (pid) {
 		const posts = await Posts.getPostsFields([pid], []);
@@ -64,8 +54,8 @@ module.exports = function (Posts) {
 		plugins.hooks.fire('action:post.setFields', { data: { ...data, pid } });
 	};
 };
-/// added async - and added the if , this is added by me
-async function modifyPost(post, fields) {
+
+function modifyPost(post, fields) {
 	if (post) {
 		db.parseIntFields(post, intFields, fields);
 		if (post.hasOwnProperty('upvotes') && post.hasOwnProperty('downvotes')) {
@@ -80,25 +70,11 @@ async function modifyPost(post, fields) {
 		if (!fields.length || fields.includes('attachments')) {
 			post.attachments = (post.attachments || '').split(',').filter(Boolean);
 		}
-
-		await Reactions.attachReactionsToPost(post, null);
+		// Mark post as "English" if decided by translator service or if it has no info
+		post.isEnglish = post.isEnglish == 'true' || post.isEnglish === undefined;
+		// If translatedContent is undefined, default to empty string (no translation needed for English posts)
+		if (post.translatedContent === undefined) {
+			post.translatedContent = '';
+		}
 	}
 }
-////original function
-//function modifyPost(post, fields) {
-//if (post) {
-//db.parseIntFields(post, intFields, fields);
-//if (post.hasOwnProperty('upvotes') && post.hasOwnProperty('downvotes')) {
-//post.votes = post.upvotes - post.downvotes;
-//}
-//if (post.hasOwnProperty('timestamp')) {
-//post.timestampISO = utils.toISOString(post.timestamp);
-//}
-//if (post.hasOwnProperty('edited')) {
-//post.editedISO = post.edited !== 0 ? utils.toISOString(post.edited) : '';
-//}
-//if (!fields.length || fields.includes('attachments')) {
-//post.attachments = (post.attachments || '').split(',').filter(Boolean);
-//}
-//}
-
