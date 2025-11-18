@@ -1,7 +1,9 @@
 /* eslint-disable strict */
 //var request = require('request');
 
-const translatorApi = module.exports;
+	try {
+		const url = TRANSLATOR_API + '/?content=' + encodeURIComponent(postData.content);
+		const response = await fetch(url);
 
 translatorApi.translate = function (postData) {
 	return ['is_english', postData];
