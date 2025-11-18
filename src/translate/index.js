@@ -1,17 +1,26 @@
+translatorApi.translate = async function (postData) {
+	// If translation is disabled (for CI etc), just echo the content back
+	if (process.env.SKIP_TRANSLATION === '1') {
+		return [true, postData.content];
+	}
 
-/* eslint-disable strict */
-//var request = require('request');
+	const TRANSLATOR_API =
+		process.env.TRANSLATOR_API ||
+		'http://crs-17313-debug-divas-gpu.qatar.cmu.edu:8080';
 
-const translatorApi = module.exports;
+	try {
+		const url = TRANSLATOR_API + '/?content=' + encodeURIComponent(postData.content);
+		const response = await fetch(url);
 
-translatorApi.translate = function (postData) {
-	return ['is_english',postData];
+		if (!response.ok) {
+			throw new Error('Bad status ' + response.status);
+		}
+
+		const data = await response.json();
+
+		return [!!data.is_english, data.translated_content || postData.content];
+	} catch (err) {
+		console.warn('Translator fetch failed, falling back:', err.message);
+		return [true, postData.content];
+	}
 };
-
-// translatorApi.translate = async function (postData) {
-//  Edit the translator URL below
-//  const TRANSLATOR_API = "TODO"
-//  const response = await fetch(TRANSLATOR_API+'/?content='+postData.content);
-//  const data = await response.json();
-//  return ['is_english','translated_content'];
-// };
