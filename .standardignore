@@ -1,0 +1,11 @@
+node_modules
+build
+dist
+public
+coverage
+uploads
+logs
+test/fixtures
+**/*.min.js
+vendor
+install/node_modules
